@@ -1,8 +1,8 @@
 from flask import Flask, request
-from flask_json import FlaskJSON
 
-app = Flask(__name__)
-FlaskJSON(app)
+def create_app():
+    app = Flask(__name__)
+    return app
 
 @app.route("/")
 def hello():
@@ -19,4 +19,5 @@ def login():
         return 'Invalid username/password'
     
 if __name__ == '__main__':
+    app = create_app()
     app.run()
