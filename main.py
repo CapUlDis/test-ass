@@ -5,6 +5,8 @@ def create_app():
     app = Flask(__name__)
     return app
 
+app = create_app()
+
 class ContentError(Exception):
     pass
 class LogError(Exception):
@@ -36,5 +38,4 @@ def login():
     
 
 if __name__ == '__main__':
-    app = create_app()
     app.run()
