@@ -1,37 +1,42 @@
 import json
 from flask import Flask, request, make_response
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    return app
 
-class ContentError(Exception):
-    pass
-class LogError(Exception):
-    pass
+if __name__ == '__main__':
+    app = create_app()
+    app.run()
 
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        if request.headers['Content-Type'] == 'application/json':
-            data = json.loads(request.get_data())
-            if 'name' and 'password' in data.keys():
-                if data['name'] == 'denchik' and data['password'] == 'foobar':
-                    message = 'OK'
-                    http_code = 200
-                else:
-                    raise LogError
-            else: 
-                raise ContentError
-        else:
-            raise ContentError
-    except ContentError:
-        message = 'BAD REQUEST'
-        http_code = 400
-    except LogError:
-        message = 'FORBIDDEN'
-        http_code = 403
+        if request.headers['Content-Type'] != 'application/json':
+            message = 'Content-Type not json'
+            http_code = 400
+            return message, http_code
         
-    return make_response(message, http_code)
+        data = json.loads(request.get_data())
+   
+    except:
+        message = 'Data has not json format'
+        http_code = 400
+        return message, http_code
     
+    else:
+        if 'name' not in data.keys() or 'password' not in data.keys():
+            message = 'Miss name or/and password'
+            http_code = 400
+            return message, http_code
+        
+        if data['name'] == 'denchik' and data['password'] == 'foobar':
+            message = 'Correct name and password'
+            http_code = 200
+            return message, http_code
+        else:
+            message = 'Wrong name or password'
+            http_code = 403
+            return message, http_code
+        
 
-if __name__ == '__main__':
-    app.run()
