@@ -5,9 +5,9 @@ def create_app():
     app = Flask(__name__)
     return app
 
-if __name__ == '__main__':
-    app = create_app()
-    app.run()
+# if __name__ == '__main__':
+app = create_app()
+app.run()
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -38,5 +38,3 @@ def login():
             message = 'Wrong name or password'
             http_code = 403
             return message, http_code
-        
-
