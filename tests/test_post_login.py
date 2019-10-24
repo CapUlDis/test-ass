@@ -1,11 +1,24 @@
 import pytest
 import json
 
-def test_login_json_without_content_type_header_returns_400(client, app):
-    response = client.post('/login', 
-            data = json.dumps({"name": "denchik", "password": "foobar"}),
+@pytest.mark.parametrize(
+        ('datam', 'header', 'message'),
+        (
+                ('', '', b'Content-Type is not json.'),
+                ('', {'content-type': 'xml'}, b'Content-Type is not json.'),
+                ('smthg', {'content-type': 'application/json'}, b'Data is not in json format.'),
+                (json.dumps({"exp1": "exp2", "exp3": "exp4"}), {'content-type': 'application/json'}, b'Name or/and password are missing.'),
+                (json.dumps({"name": "denchik", "password": "foobar"}), {'content-type': 'application/json'}, b'Correct name and password.'),
+                (json.dumps({"name": "den", "password": "foobar"}), {'content-type': 'application/json'}, b'Wrong name or password.'),
+                (json.dumps({"name": "denchik", "password": "foo"}), {'content-type': 'application/json'}, b'Wrong name or password.'),
+                
+        ),
+)
+def test_login_with_different_data_headers(client, app, datam, header, message):
+    response = client.post(
+            '/login', data = datam, headers = header
             )
-    print(response.data)
-    assert response.data == b'Content-Type not json'
+    
+    assert message in response.data
 
     
