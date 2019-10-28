@@ -1,6 +1,5 @@
 import json
 import werkzeug
-import sys
 from flask import Flask, request
 
 
@@ -10,10 +9,11 @@ def create_app():
 
 app = create_app()
 
+
 @app.route('/login', methods=['POST'])
 def login():
-    
-    try:
+  
+   try:
         data = request.get_json()
     except werkzeug.exceptions.BadRequest:
         return 'Data is not in json format.', 400
@@ -31,6 +31,4 @@ def login():
 
 if __name__ == '__main__':
     app.run()
-
-
 
