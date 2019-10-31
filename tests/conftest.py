@@ -6,7 +6,6 @@ from main import create_app, login
 @pytest.fixture
 def app():
     app = create_app()
-    app.add_url_rule('/login', view_func=login, methods=['POST'])
     yield app
 
 

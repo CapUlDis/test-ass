@@ -3,17 +3,9 @@ import werkzeug
 from flask import Flask, request
 
 
-def create_app():
-    app = Flask(__name__)
-    return app
-
-app = create_app()
-
-
-@app.route('/login', methods=['POST'])
 def login():
   
-   try:
+    try:
         data = request.get_json()
     except werkzeug.exceptions.BadRequest:
         return 'Data is not in json format.', 400
@@ -28,6 +20,14 @@ def login():
         return 'Correct name and password.', 200
     
     return 'Wrong name or password.', 403
+    
+def create_app():
+    app = Flask(__name__)
+    app.add_url_rule('/login', view_func=login, methods=['POST'])
+    return app
+
+app = create_app()
+
 
 if __name__ == '__main__':
     app.run()
