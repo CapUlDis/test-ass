@@ -1,22 +1,27 @@
-import requests
 import pytest
+import json
 
-def test_correct_login():
+@pytest.mark.parametrize(
+        ('data', 'headers', 'message', 'http_code'),
+        (
+                ('', '', b'Content-Type is not json.', 400),
+                ('', {'content-type': 'xml'}, b'Content-Type is not json.', 400),
+                ('smthg', {'content-type': 'application/json'}, b'Data is not in json format.', 400),
+                (json.dumps({"exp1": "exp2", "exp3": "exp4"}), {'content-type': 'application/json'}, b'Name or/and password are missing.', 400),
+                (json.dumps({"name": "denchik", "password": "foobar"}), {'content-type': 'application/json'}, b'Correct name and password.', 200),
+                (json.dumps({"name": "den", "password": "foobar"}), {'content-type': 'application/json'}, b'Wrong name or password.', 403),
+                (json.dumps({"name": "denchik", "password": "foo"}), {'content-type': 'application/json'}, b'Wrong name or password.', 403),
+                
+        ),
+        ids = ['No Content-Type','Content-Type is xml','Not json format','No password and data','Correct name and password','Wrong name','Wrong password']
+)
+def test_login_with_different_data_and_headers(client, app, data, headers, message, http_code):
+    response = client.post(
+            '/login', data = data, headers = headers
+            )
     
-    response = requests.post('http://localhost:5000/login', json={"name" : "denchik", "password" : "foobar"})
-    assert response.status_code == 200
-    assert response.content == b'OK'
+    assert message in response.data
+    assert http_code == response.status_code
 
-def test_incorrect_login():
-
-    response = requests.post('http://localhost:5000/login', json={"name" : "den", "password" : "foobar"})
-    assert response.status_code == 403
-    assert response.content == b'FORBIDDEN'
-
-def test_invalid_header():
-
-    response = requests.post('http://localhost:5000/login', data={"name" : "den", "password" : "foobar"})
-    assert response.status_code == 400
-    assert response.content == b'BAD REQUEST'
-
+    
 
