@@ -22,7 +22,6 @@ def create_app():
     app = Flask(__name__)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     return app
-
 app = create_app()
 
 
