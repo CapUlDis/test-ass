@@ -10,6 +10,9 @@ def login():
     except werkzeug.exceptions.BadRequest:
         return 'Data is not in json format.', 400
     
+    if data is None:
+        return 'Content-Type is not json.', 400
+        
     if 'name' not in data.keys() or 'password' not in data.keys():
         return 'Name or/and password are missing.', 400
     
