@@ -3,15 +3,16 @@ from flask import Flask, request
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-os.environ['tda_credit'] = '/home/capuldis/repos/to-do-app/credentials.txt'
+def load_credits(path_credit):
 
-try:
-    with open(os.environ['tda_credit']) as f:
-        credit = json.load(f)
-except FileNotFoundError:
-    print('No such file or working directory')
-except json.decoder.JSONDecodeError:
-    print('Data in credentials.txt is not json')
+    try:
+        with open(path_credit) as f:
+            credit = json.load(f)
+            return credit
+    except FileNotFoundError:
+        return 'No such file in working directory'
+    except json.decoder.JSONDecodeError:
+        return 'Data in credentials.txt is not json'
 
 def login():
   
