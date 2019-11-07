@@ -1,5 +1,6 @@
 import os, sys
 import json
+#from main import * 
 #from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -32,15 +33,9 @@ def load_credits(path_credit):
         with open(path_credit) as f:
             credit = json.load(f)
             return credit
-    except FileNotFoundError:
-        print('No such file or working directory')
-    except json.decoder.JSONDecodeError:
-        print('Data in credentials.txt is not json')
+    except FileNotFoundError as err:
+        print('No such file in working directory:', err)
+    except json.decoder.JSONDecodeError as err:
+        print('Data in credentials.txt is not json', err)
 
-credit = load_credits(os.path.dirname(os.path.realpath(__file__)) + '/credentials.txt')
-print(credit)
-
-from main import load_credits
-import os,json
-
-load_credits(os.path.dirname(os.path.realpath('main.py')) + '/credentials.txt')
+credit = load_credits(os.path.dirname(os.path.realpath(__file__)) + '/credential.txt')

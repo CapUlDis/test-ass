@@ -10,9 +10,9 @@ def load_credits(path_credit):
             credit = json.load(f)
             return credit
     except FileNotFoundError:
-        return 'No such file in working directory'
+        print('No such file in working directory')
     except json.decoder.JSONDecodeError:
-        return 'Data in credentials.txt is not json'
+        print('Data in credentials.txt is not json')
 
 def login():
   
