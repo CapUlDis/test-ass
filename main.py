@@ -1,7 +1,14 @@
 import os, json, werkzeug
+import logging 
 from flask import Flask, request
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+logging.basicConfig(filename="main.log", 
+                    format='%(asctime)s %(message)s', 
+                    filemode='w') 
+logger = logging.getLogger() 
+logger.setLevel(logging.ERROR) 
 
 def load_credits(path_credit):
 
@@ -10,9 +17,9 @@ def load_credits(path_credit):
             credit = json.load(f)
             return credit
     except FileNotFoundError:
-        print('No such file in working directory')
+        logger.error('FileNotFoundError: no credentials.txt in ' + os.path.dirname(os.path.realpath(__file__)))
     except json.decoder.JSONDecodeError:
-        print('Data in credentials.txt is not json')
+        logger.error('JSONDecodeError: data in credentials.txt is not json')
 
 def login():
   

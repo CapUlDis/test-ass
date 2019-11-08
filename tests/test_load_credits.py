@@ -1,6 +1,7 @@
 import pytest
 import os
-from main import *
+import mock
+
 
 
 '''@pytest.mark.parametrize(
@@ -11,6 +12,6 @@ from main import *
     )
 )'''
 def test_load_credits_cases_exception():
-    assert load_credits(os.path.dirname(os.path.realpath(__file__)) + '/credentials.txt') == b'No such file or working directory'
-    
+    with mock.patch('main.log') as log_mock:
+        
     
