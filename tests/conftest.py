@@ -1,6 +1,6 @@
 import pytest
 
-from main import create_app, login, load_credits
+from main import create_app, login
 
 
 @pytest.fixture

@@ -10,17 +10,6 @@ logging.basicConfig(filename="main.log",
 logger = logging.getLogger() 
 logger.setLevel(logging.ERROR) 
 
-def load_credits(path_credit):
-
-    try:
-        with open(path_credit) as f:
-            credit = json.load(f)
-            return credit
-    except FileNotFoundError:
-        logger.error('FileNotFoundError: no credentials.txt in ' + os.path.dirname(os.path.realpath(__file__)))
-    except json.decoder.JSONDecodeError:
-        logger.error('JSONDecodeError: data in credentials.txt is not json')
-
 def login():
   
     try:
