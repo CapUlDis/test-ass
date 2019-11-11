@@ -12,7 +12,7 @@ logger = logging.getLogger()
 
 
 
-'''os.environ['tda_credit'] = '/home/capuldis/repos/to-do-app/credentials.txt'
+os.environ['tda_credit'] = '/home/capuldis/repos/to-do-app/credentials.txt'
 
 try:
     with open(os.path.dirname(os.path.realpath(__file__)) + '/credentials.txt') as f:
@@ -33,7 +33,7 @@ pathname = os.path.dirname(sys.argv[0])
 print('path =', pathname)
 print('full path =', os.path.abspath(pathname)) 
 
-print(os.path.dirname(os.path.realpath(__file__)) + '/credentials.txt')'''
+print(os.path.dirname(os.path.realpath(__file__)) + '/credentials.txt')
 
 def load_credits(path_credit):
 
