@@ -11,6 +11,7 @@ from main import logger
         (os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/credential.txt', f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}'),
         (os.path.dirname(os.path.realpath(__file__)) + '/crap.txt', f'JSONDecodeError: data in credentials.txt is not json'),
     ),
+    ids = ['No credentials.txt case', 'Data in file is not json']
 )
 def test_load_credits_FileNotFound(path, expected_str):
     with mock.patch.object(logger, 'error') as mock_error:
