@@ -1,8 +1,7 @@
 import pytest
 import os
 import mock
-from credits import load_credits
-from main import logger
+from credit import load_credits, logger
 
 
 @pytest.mark.parametrize(
