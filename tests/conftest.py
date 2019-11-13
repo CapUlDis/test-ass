@@ -14,6 +14,3 @@ def client(app):
     """A test client for the app."""
     app.testing = True
     return app.test_client()
-
-
-

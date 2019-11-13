@@ -1,7 +1,7 @@
 import pytest
 import json
 import mock
-import main
+import credit
 
 @pytest.mark.parametrize(
         ('data', 'headers', 'message', 'http_code'),
@@ -11,8 +11,8 @@ import main
                 ('smthg', {'content-type': 'application/json'}, b'Data is not in json format.', 400),
                 (json.dumps({"exp1": "exp2", "exp3": "exp4"}), {'content-type': 'application/json'}, b'Name or/and password are missing.', 400),
                 (json.dumps({"name": "denchik", "password": "foobar"}), {'content-type': 'application/json'}, b'Correct name and password.', 200),
-                (json.dumps({"name": "den", "password": "foobar"}), {'content-type': 'application/json'}, b'Such name is not registered.', 403),
-                (json.dumps({"name": "denchik", "password": "foo"}), {'content-type': 'application/json'}, b'Invalid password.', 403),
+                (json.dumps({"name": "den", "password": "foobar"}), {'content-type': 'application/json'}, b'Invalid name or password.', 403),
+                (json.dumps({"name": "denchik", "password": "foo"}), {'content-type': 'application/json'}, b'Invalid name or password.', 403),
                 
         ),
         ids = ['No Content-Type','Content-Type is xml','Not json format','No password and data','Correct name and password','Not registered name','Invalid password']
@@ -26,7 +26,8 @@ def test_login_with_different_data_and_headers(client, app, data, headers, messa
         assert http_code == response.status_code
 
 def test_login_credit_is_not_dict(client, app):
-        with mock.patch(main.credit, return_value = None):
+        with mock.patch('credit.load_credits') as mock_credit:
+                mock_credit = None
                 response = client.post(
                         '/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'}
                 )
