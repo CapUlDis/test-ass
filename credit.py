@@ -18,10 +18,10 @@ def load_credits(path_credit):
                 return None
             return credit
     except FileNotFoundError as err:
-        logger.error(f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.realpath(__file__))}')
+        logger.error(f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.realpath(__file__))}: {err}')
         return None
     except json.decoder.JSONDecodeError as err:
-        logger.error(f'JSONDecodeError: data in credentials.txt is not json')
+        logger.error(f'JSONDecodeError: data in credentials.txt is not json: {err}')
         return None
 
 def valid_user(pwhash, password):

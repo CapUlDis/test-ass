@@ -1,7 +1,7 @@
 import pytest
 import json
 import mock
-import credit
+import main
 
 @pytest.mark.parametrize(
         ('data', 'headers', 'message', 'http_code'),
@@ -26,8 +26,7 @@ def test_login_with_different_data_and_headers(client, app, data, headers, messa
         assert http_code == response.status_code
 
 def test_login_credit_is_not_dict(client, app):
-        with mock.patch('credit.load_credits') as mock_credit:
-                mock_credit = None
+        with mock.patch('main.load_credits', return_value = None) as mock_credit:
                 response = client.post(
                         '/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'}
                 )
