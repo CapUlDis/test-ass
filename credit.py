@@ -29,3 +29,19 @@ def valid_user(pwhash, password):
     if check_password_hash(pwhash, password):
         return True
     return False
+
+class Credits:
+    
+    def __init__(self, path_credit):
+        self.load = load_credits(path_credit)
+        self.state = None
+        
+    def check(self, name, password):
+        self.state = check_password_hash(self.load[name], password)
+
+cred = Credits('/home/capuldis/repos/to-do-app/credentials.txt')
+#cred.load('/home/capuldis/repos/to-do-app/credentials.txt')
+cred.check('denchik', 'foobar')
+print(cred.state)
+
+        
