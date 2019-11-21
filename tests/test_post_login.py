@@ -25,11 +25,5 @@ def test_login_with_different_data_and_headers(client, app, data, headers, messa
         assert message in response.data
         assert http_code == response.status_code
 
-def test_login_credit_is_not_dict(client, app):
-        with mock.patch('main.load_credits', return_value = None) as mock_credit:
-                response = client.post(
-                        '/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'}
-                )
-                assert b'Server currently are unavailable.' == response.data
-                assert 500 == response.status_code
+
         

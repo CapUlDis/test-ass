@@ -15,6 +15,7 @@ def load_credits(path_credit):
         with open(path_credit) as f:
             credit = json.load(f)
             if type(credit) is not dict:
+                logger.error('Data in credentials.txt is not dictionary')
                 return None
             return credit
     except FileNotFoundError as err:
@@ -24,24 +25,19 @@ def load_credits(path_credit):
         logger.error(f'JSONDecodeError: data in credentials.txt is not json: {err}')
         return None
 
-def valid_user(pwhash, password):
-
-    if check_password_hash(pwhash, password):
-        return True
-    return False
-
 class Credits:
     
     def __init__(self, path_credit):
         self.load = load_credits(path_credit)
-        self.state = None
         
-    def check(self, name, password):
-        self.state = check_password_hash(self.load[name], password)
+    def check_name(self, name):
+        if name not in self.load:
+            return False
+        return True
+    
+    def check_pass(self, name, password):
+        return check_password_hash(self.load[name], password)
 
-cred = Credits('/home/capuldis/repos/to-do-app/credentials.txt')
-#cred.load('/home/capuldis/repos/to-do-app/credentials.txt')
-cred.check('denchik', 'foobar')
-print(cred.state)
+
 
         
