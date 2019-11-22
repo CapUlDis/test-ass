@@ -1,6 +1,7 @@
 import pytest
 import os
 import mock
+import re
 from credit import load_credits, logger
 
 
@@ -12,11 +13,9 @@ from credit import load_credits, logger
     ),
     ids = ['No credentials.txt case', 'Data in file is not json']
 )
-def test_load_credits_FileNotFound(path, expected_str):
+def test_load_credits(path, expected_str):
     with mock.patch.object(logger, 'error') as mock_error:
         load_credits(path)
-        mock_error.assert_called_once_with(expected_str)
+        assert 'JSONDecodeError: data in credentials.txt is not json: Expecting value: line 1 column 1 (char 0)' in mock_error.mock_calls[0]
         
 
-
-    
