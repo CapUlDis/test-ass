@@ -1,8 +1,7 @@
 import pytest
 import os
-import mock
-import re
 from credit import load_credits, logger
+from unittest import mock
 
 
 @pytest.mark.parametrize(
@@ -16,7 +15,7 @@ from credit import load_credits, logger
 def test_load_credits(path, expected_str):
     with mock.patch.object(logger, 'error') as mock_error:
         load_credits(path)
-        assert re.search(expected_str, str(mock_error.mock_calls[0].args))
+        assert expected_str in mock_error.call_args[0][0]
 
 
 
