@@ -1,6 +1,7 @@
 import os, json, werkzeug
-from flask import Flask, request
+from flask import Flask, request, current_app
 from credit import Credits
+
 
 
 def login():
@@ -16,10 +17,10 @@ def login():
     if 'name' not in data or 'password' not in data:
         return 'Name or/and password are missing.', 400
     
-    if not app.credit.check_name(data['name']):
+    if not current_app.credit.check_name(data['name']):
         return 'Invalid name or password.', 403
 
-    if not app.credit.check_pass(data['name'], data['password']):
+    if not current_app.credit.check_pass(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
     return 'Correct name and password.', 200
@@ -30,9 +31,8 @@ def create_app():
     app.credit = Credits(os.environ.get('todoappcredits'))
     return app
 
-app = create_app()
-
 
 if __name__ == '__main__':
+    app = create_app()
     app.run()
 
