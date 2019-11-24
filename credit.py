@@ -31,9 +31,7 @@ class Credits:
         self.load = load_credits(path_credit)
         
     def check_name(self, name):
-        if name not in self.load:
-            return False
-        return True
+        return name in self.load
     
     def check_pass(self, name, password):
         return check_password_hash(self.load[name], password)

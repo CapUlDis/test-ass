@@ -3,8 +3,6 @@ from flask import Flask, request
 from credit import Credits
 
 
-credit = Credits('/home/capuldis/repos/to-do-app/credentials.txt')
-
 def login():
     
     try:
@@ -18,10 +16,10 @@ def login():
     if 'name' not in data or 'password' not in data:
         return 'Name or/and password are missing.', 400
     
-    if not credit.check_name(data['name']):
+    if not app.credit.check_name(data['name']):
         return 'Invalid name or password.', 403
 
-    if not credit.check_pass(data['name'], data['password']):
+    if not app.credit.check_pass(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
     return 'Correct name and password.', 200
@@ -29,10 +27,10 @@ def login():
 def create_app():
     app = Flask(__name__)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
+    app.credit = Credits(os.environ.get('todoappcredits'))
     return app
 
-if credit != None:   
-    app = create_app()
+app = create_app()
 
 
 if __name__ == '__main__':
