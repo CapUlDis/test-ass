@@ -17,10 +17,7 @@ def login():
     if 'name' not in data or 'password' not in data:
         return 'Name or/and password are missing.', 400
     
-    if not current_app.credit.check_name(data['name']):
-        return 'Invalid name or password.', 403
-
-    if not current_app.credit.check_pass(data['name'], data['password']):
+    if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
     return 'Correct name and password.', 200
