@@ -1,7 +1,7 @@
 import pytest
 import json
-import mock
 import main
+from unittest import mock
 
 @pytest.mark.parametrize(
         ('data', 'headers', 'message', 'http_code'),
