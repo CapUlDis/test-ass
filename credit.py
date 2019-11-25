@@ -7,7 +7,7 @@ logging.basicConfig(filename="main.log",
                     format='%(asctime)s %(message)s', 
                     filemode='w') 
 logger = logging.getLogger() 
-logger.setLevel(logging.ERROR) 
+logger.setLevel(logging.WARNING) 
 
 def load_credits(path_credit):
 

@@ -2,6 +2,7 @@ import pytest
 import json
 import main
 from unittest import mock
+from credit import logger
 
 @pytest.mark.parametrize(
         ('data', 'headers', 'message', 'http_code'),
@@ -25,5 +26,20 @@ def test_login_with_different_data_and_headers(client, app, data, headers, messa
         assert message in response.data
         assert http_code == response.status_code
 
+@pytest.mark.parametrize(
+        ('data', 'headers', 'message', 'log_message'),
+        (
+                (json.dumps({"name" : 78 , "password" : "bar" }), {'content-type': 'application/json'}, b'Invalid name or password.', 'WARNING: Client sent not string name'),
+                (json.dumps({"name" : "foo" , "password" : 55 }), {'content-type': 'application/json'}, b'Invalid name or password.', 'WARNING: Client sent not string password'),
+        ),
+        ids = ['Not string name', 'Not string password']
+)
+def test_login_with_not_string_name_and_password(client, app, data, headers, message, log_message):
+        with mock.patch.object(logger, 'warning') as mock_warning:
+                response = client.post(
+                '/login', data = data, headers = headers
+                )
+                mock_warning.assert_called_once_with(log_message)
+                assert message in response.data
 
         
