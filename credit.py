@@ -21,12 +21,12 @@ def load_credits(path_credit):
             v = 0
             for key in credit:
                 if not isinstance(key, str):
-                    k += 0
+                    k += 1
             for value in credit:
                 if not isinstance(value, str):
-                    v += 0
-            if k > 0 or j > 0:
-                logger.error(TypeError('%d keys and %d values in credit dictionary are not string' % (i, j)))
+                    v += 1
+            if k > 0 or v > 0:
+                logger.error(TypeError('%d keys and %d values in credit dictionary are not string' % (k, v)))
                 raise TypeError
             return credit
     except FileNotFoundError as err:
@@ -45,18 +45,3 @@ class Credits:
         if name not in self.load:
             return False
         return check_password_hash(self.load[name], password)
-
-
-d = {'a': 0, 'b': '0', 8: 'ss', 2: 7, 'f': 'eg', 'k': '33'}
-i = 0
-j = 0
-
-for key in d:
-    if not isinstance(key, str):
-        i += 1
-for value in d:
-    if not isinstance(value, str):
-        j += 1
-if i > 0 or j > 0 :
-    raise TypeError('%d keys and %d values in credit dictionary are not string' % (i, j))      
-
