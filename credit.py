@@ -14,9 +14,20 @@ def load_credits(path_credit):
     try:
         with open(path_credit) as f:
             credit = json.load(f)
-            if type(credit) is not dict:
+            if not isinstance(credit, dict):
                 logger.error('Data in credentials.txt is not dictionary')
-                return None
+                raise TypeError
+            k = 0
+            v = 0
+            for key in credit:
+                if not isinstance(key, str):
+                    k += 0
+            for value in credit:
+                if not isinstance(value, str):
+                    v += 0
+            if k > 0 or j > 0:
+                logger.error(TypeError('%d keys and %d values in credit dictionary are not string' % (i, j)))
+                raise TypeError
             return credit
     except FileNotFoundError as err:
         logger.error(f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.realpath(__file__))}: {err}')
@@ -36,5 +47,16 @@ class Credits:
         return check_password_hash(self.load[name], password)
 
 
+d = {'a': 0, 'b': '0', 8: 'ss', 2: 7, 'f': 'eg', 'k': '33'}
+i = 0
+j = 0
 
-        
+for key in d:
+    if not isinstance(key, str):
+        i += 1
+for value in d:
+    if not isinstance(value, str):
+        j += 1
+if i > 0 or j > 0 :
+    raise TypeError('%d keys and %d values in credit dictionary are not string' % (i, j))      
+
