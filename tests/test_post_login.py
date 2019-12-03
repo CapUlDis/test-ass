@@ -1,8 +1,6 @@
-import pytest
-import json
-import main
+import pytest, json
 from unittest import mock
-from credit import logger
+from main import logger
 
 @pytest.mark.parametrize(
         ('data', 'headers', 'message', 'http_code'),
