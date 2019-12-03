@@ -39,3 +39,5 @@ class Credits:
         if name not in self.load:
             return False
         return check_password_hash(self.load[name], password)
+
+
