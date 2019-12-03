@@ -1,13 +1,7 @@
-import os, sys, logging
-import json
+import os, sys, json
+from main import logger
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-logging.basicConfig(filename="main.log", 
-                    format='%(asctime)s %(message)s', 
-                    filemode='w') 
-logger = logging.getLogger() 
-logger.setLevel(logging.WARNING) 
 
 def load_credits(path_credit):
 

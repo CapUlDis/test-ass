@@ -1,7 +1,7 @@
-import pytest
-import os
-from credit import load_credits, logger
-from unittest import mock, TestCase
+import pytest, os
+from main import logger
+from credit import load_credits
+from unittest import mock
 
 
 @pytest.mark.parametrize(
@@ -17,11 +17,6 @@ def test_load_credits(path, expected_str):
     with mock.patch.object(logger, 'error') as mock_error:
         load_credits(path)
         assert expected_str in mock_error.call_args[0][0]
-
-class LoadTestCases(TestCase):
-    def test_1(self):
-        with self.assertRaises(TypeError):
-            load_credits(os.path.dirname(os.path.realpath(__file__)) + '/not_dict.txt')
 
 
 
