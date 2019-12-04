@@ -41,10 +41,3 @@ class Credits:
             return False
         return check_password_hash(self.load[name], password)
 
-
-d = {'foo': 'bar', 'baz': 0, 4: 'quuz', 5: 8}
-i = 0
-for item in d: 
-    if not isinstance(item, str):
-        i += 1
-print(i)
