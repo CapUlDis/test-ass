@@ -1,8 +1,9 @@
-import pytest, os, json
-from main import logger
+import pytest, os, json, logging
 from credit import load_credits
 from unittest import mock
 
+
+logger = logging.getLogger('main.py')
 
 @pytest.mark.parametrize(
     ('error','path', 'expected_str'),

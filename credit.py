@@ -1,7 +1,8 @@
-import os, sys, json
-from main import logger
+import os, sys, json, logging
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+logger = logging.getLogger('main.py')
 
 def load_credits(path_credit):
 
@@ -41,3 +42,9 @@ class Credits:
         return check_password_hash(self.load[name], password)
 
 
+d = {'foo': 'bar', 'baz': 0, 4: 'quuz', 5: 8}
+i = 0
+for item in d: 
+    if not isinstance(item, str):
+        i += 1
+print(i)

@@ -1,15 +1,13 @@
 import os, json, werkzeug, logging
 from flask import Flask, request, current_app
-
+from credit import Credits
 
 
 logging.basicConfig(filename="main.log", 
                     format='%(asctime)s %(message)s', 
-                    filemode='w') 
+                    filemode='w',
+                    level = logging.WARNING) 
 logger = logging.getLogger() 
-logger.setLevel(logging.WARNING) 
-
-from credit import Credits
 
 def login():
     
