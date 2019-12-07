@@ -5,23 +5,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 logger = logging.getLogger('main.py')
 
 def load_credits(path_credit):
-
     try:
         with open(path_credit) as f:
             credit = json.load(f)
             if not isinstance(credit, dict):
-                logger.error('Data in credentials.txt is not dictionary')
+                logger.error('Data in credentials.txt is not dictionary or malformed')
                 raise TypeError
-            k = 0
             v = 0
-            for key in credit:
-                if not isinstance(key, str):
-                    k += 1
-            for value in credit:
+            for value in credit.values():
                 if not isinstance(value, str):
                     v += 1
-            if k > 0 or v > 0:
-                logger.error(TypeError('%d keys and %d values in credit dictionary are not string' % (k, v)))
+            if v > 0:
+                logger.error('TypeError: %d values in credit dictionary are not string' %v)
                 raise TypeError
             return credit
     except FileNotFoundError as err:
