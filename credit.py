@@ -2,7 +2,7 @@ import os, sys, json, logging
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-logger = logging.getLogger('main.py')
+logger = logging.getLogger(__file__)
 
 def load_credits(path_credit):
     try:
