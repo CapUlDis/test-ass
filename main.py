@@ -1,8 +1,13 @@
-import os, json, werkzeug
+import os, json, werkzeug, logging
 from flask import Flask, request, current_app
 from credit import Credits
 
 
+logging.basicConfig(filename="main.log", 
+                    format='%(asctime)s %(message)s', 
+                    filemode='w',
+                    level = logging.WARNING) 
+logger = logging.getLogger() 
 
 def login():
     
@@ -16,7 +21,13 @@ def login():
         
     if 'name' not in data or 'password' not in data:
         return 'Name or/and password are missing.', 400
-    
+
+    if not isinstance(data['name'], str):
+        return 'Name is not a string.', 400
+
+    if not isinstance(data['password'], str):
+        return 'Password is not a string.', 400
+
     if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
