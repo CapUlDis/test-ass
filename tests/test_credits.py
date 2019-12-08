@@ -21,7 +21,7 @@ def test_load_credits_errors(error, path, expected_str):
 
 def test_load_credits_normal():
     test_credit = load_credits(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/credentials.txt')
-    assert type(test_credit) is dict
+    assert test_credit == {"denchik": "pbkdf2:sha256:150000$wHwsgiLd$6979f267446c0e3d2797c21006f9272c3e19d5c70925d87989983ab3826350d8"}
 
 @pytest.mark.parametrize(
     ('name', 'password', 'result'),

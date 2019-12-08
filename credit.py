@@ -16,7 +16,7 @@ def load_credits(path_credit):
                 if not isinstance(value, str):
                     v += 1
             if v > 0:
-                logger.error('TypeError: %d values in credit dictionary are not string' %v)
+                logger.error(f'TypeError: {v} values in credit dictionary are not string')
                 raise TypeError
             return credit
     except FileNotFoundError as err:
