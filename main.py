@@ -1,6 +1,5 @@
-import os, werkzeug, logging, datetime
+import os, werkzeug, logging
 from flask import Flask, request, current_app
-from jwcrypto import jwt, jwk
 from credit import Credits
 
 
@@ -9,9 +8,6 @@ logging.basicConfig(filename="main.log",
                     filemode='w',
                     level = logging.WARNING) 
 logger = logging.getLogger() 
-
-token_key = jwk.JWK(generate='oct', size=256)
-
 
 def login():
     
@@ -35,9 +31,6 @@ def login():
     if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
-    token = jwt.JWT(header={"alg": "HS256"},
-                    claims={"user": data['name'], "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30)})
-    token.make_signed_token(token_key)
     return 'Correct name and password.', 200
     
 def create_app():
