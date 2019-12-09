@@ -1,4 +1,4 @@
-import pytest, os, json, logging
+import pytest, os
 from credit import load_credits, Credits, logger
 from unittest import mock
 

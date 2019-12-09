@@ -1,4 +1,4 @@
-import os, json, werkzeug, logging, datetime
+import os, werkzeug, logging, datetime
 from flask import Flask, request, current_app
 from jwcrypto import jwt, jwk
 from credit import Credits
@@ -50,14 +50,3 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     app.run()
-
-
-import datetime
-from jwcrypto import jwk, jwt
-
-token_key = jwk.JWK(generate='oct', size=256)
-
-token = jwt.JWT(header={"alg": "HS256"},
-                claims={"user": "ass", "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30)})
-token.make_signed_token(token_key)
-token.serialize()
