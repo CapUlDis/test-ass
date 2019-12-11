@@ -1,4 +1,4 @@
-import time, logging, json
+import calendar, logging, json
 from datetime import datetime, timedelta
 from jwcrypto import jwt, jwk
 
@@ -15,8 +15,17 @@ def create_token(username, exp, path_token_key):
         logger.error(f'JSONDecodeError: data in {path_token_key} is not json: {err}')
         
     token = jwt.JWT(header={"alg": "HS256"},
-                    claims={"user": username, "exp": time.mktime((datetime.utcnow() + timedelta(minutes=exp)).timetuple())})
+                    claims={"user": username, "exp": calendar.timegm((datetime.utcnow() + timedelta(minutes=exp)).timetuple())})
     token.make_signed_token(token_key)
     return token.serialize()
 
 print(create_token('foo', 30, 'token_key.txt'))
+
+token = jwt.JWT(header={"alg": "HS256"},
+                claims={"user": 'username', "exp": calendar.timegm((datetime.utcnow() + timedelta(minutes=30)).timetuple())})
+token_key = jwk.JWK.from_json('{"k":"_nYabzvHVPyBDFKFbMGB4twnAuRHWVV_N3yZWYM_Fx8","kty":"oct"}')
+token.make_signed_token(token_key)
+
+eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzYwMzkzODEuMCwidXNlciI6InVzZXJuYW1lIn0.x-Ds1Ud_SR8KgL2JaZgdY3quuA1rlpPgD11neSjZVfo
+
+ET = jwt.JWT(key=token_key, jwt=token.serialize())
