@@ -1,6 +1,6 @@
 import pytest, os
 from unittest import mock
-from auth import load_token_key, logger
+from auth import load_token_key, Token, logger
 
 
 @pytest.mark.parametrize(
@@ -20,3 +20,7 @@ def test_load_token_key_for_errors(error, path, expected_str):
 def test_load_key_normal_case():
     test_token_key = load_token_key(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     assert test_token_key.export() == '{"k":"foo","kty":"oct"}'
+
+def test_class_Token_normal_case():
+    test_token = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    
