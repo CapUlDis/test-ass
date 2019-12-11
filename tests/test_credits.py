@@ -13,13 +13,13 @@ from unittest import mock
     ),
     ids = ['No credentials.txt case', 'Data in file is not json', 'Data is not dictionary', 'Credentials have not string data']
 )
-def test_load_credits_errors(error, path, expected_str):
+def test_load_credits_for_errors(error, path, expected_str):
     with pytest.raises(error):
         with mock.patch.object(logger, 'error') as mock_error:
             load_credits(path)
     assert expected_str in mock_error.call_args[0][0]
 
-def test_load_credits_normal():
+def test_load_credits_for_normal_case():
     test_credit = load_credits(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/credentials.txt')
     assert test_credit == {"denchik": "pbkdf2:sha256:150000$wHwsgiLd$6979f267446c0e3d2797c21006f9272c3e19d5c70925d87989983ab3826350d8"}
 
