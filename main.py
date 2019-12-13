@@ -1,6 +1,7 @@
 import os, werkzeug, logging
 from flask import Flask, request, current_app
 from credit import Credits
+from auth import Token
 
 
 logging.basicConfig(filename="main.log", 
@@ -31,12 +32,14 @@ def login():
     if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
-    return 'Correct name and password.', 200
+    return current_app.token.create_new_token(data['name'], current_app.token_exp), 200
     
 def create_app():
     app = Flask(__name__)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
-    app.credit = Credits(os.environ.get('todoappcredits'))
+    app.credit = Credits(os.environ.get('tda_credits'))
+    app.token = Token(os.environ.get('tda_token_key'))
+    app.token_exp = 30
     return app
 
 
