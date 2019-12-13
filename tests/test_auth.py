@@ -24,10 +24,11 @@ def test_load_key_normal_case():
     test_token_key = load_token_key(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     assert test_token_key.export() == '{"k":"foo","kty":"oct"}'
 
-def test_class_Token_create_new_token_normal_case():
+def test_class_Token_create_and_check_token_normal_case():
     test_token_object  = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     str_token = test_token_object.create_new_token('testname', 30)
     assert str_token.count('.') == 2
+    assert test_token_object.check_token(str_token) is True
 
 @pytest.mark.parametrize(
     ('n_case', 'expected_str'),
@@ -38,7 +39,7 @@ def test_class_Token_create_new_token_normal_case():
     ),
     ids = ['Expired token', 'Token has invalid signature', 'Received string is not JSON Web Token']
 )    
-def test_class_Tokem_check_token_all_cases(n_case, expected_str):
+def test_class_Tokem_check_token_all_error_cases(n_case, expected_str):
     token_case_list = [0,0,0]
 
     main_token_object = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
