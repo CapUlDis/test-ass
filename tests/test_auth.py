@@ -1,8 +1,9 @@
 import pytest, os
 from unittest import mock
 from auth import load_token_key, Token, logger
-from jwcrypto import jwt, jwk, jws
 from freezegun import freeze_time
+from datetime import datetime, timedelta
+
 
 
 @pytest.mark.parametrize(
@@ -29,15 +30,26 @@ def test_class_Token_create_new_token_normal_case():
     assert str_token.count('.') == 2
 
 @pytest.mark.parametrize(
-    ('token_exp', 'freeze_point', 'error', 'result'),
+    ('n_case', 'expected_str'),
     (
-        (30, 60, jwt.JWTExpired, False),
-        (30, 0, jws.InvalidJWSSignature, )
-    )
+        (0, 'JWTExpired: token is expired'),
+        (1, 'InvalidJWSSignature: token has invalid signature'),
+        (2, 'ValueError: received string is not JSON Web Token')
+    ),
+    ids = ['Expired token', 'Token has invalid signature', 'Received string is not JSON Web Token']
 )    
-def test_class_Tokem_check_token_all_cases(token_exp, error, result):
-    str_token_wrong_key = ''
+def test_class_Tokem_check_token_all_cases(n_case, expected_str):
+    token_case_list = [0,0,0]
 
-    test_token_object = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
-    str_token = test_token_object.create_new_token('testname', token_exp)
-    test_token_object.check_token(str_token)
+    main_token_object = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    token_case_list[0] = main_token_object.create_new_token('testname', 30)
+    
+    other_key_token_object = Token(os.path.dirname(os.path.realpath(__file__)) + '/other_test_token_key.txt')
+    token_case_list[1] = other_key_token_object.create_new_token('testname', 60)
+
+    token_case_list[2] = 'this_string_is_not_JSON_Web_token'
+
+    with freeze_time(datetime.utcnow() + timedelta(minutes = 31)):
+        with mock.patch.object(logger, 'info') as mock_info:
+            assert main_token_object.check_token(token_case_list[n_case]) is False
+            assert expected_str in mock_info.call_args[0][0]
