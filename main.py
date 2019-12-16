@@ -37,9 +37,9 @@ def login():
 def create_app():
     app = Flask(__name__)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
-    app.credit = Credits(os.environ.get('tda_credits'))
-    app.token = Token_gen(os.environ.get('tda_token_key'))
-    app.token_exp = 30
+    app.credit = Credits(os.environ.get('TDA_CREDITS'))
+    app.token = Token_gen(os.environ.get('TDA_TOKEN_KEY'))
+    app.token_exp = int(os.environ.get('TDA_TOKEN_EXPIRATION_MINUTES'))
     return app
 
 
