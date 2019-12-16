@@ -12,12 +12,12 @@ def load_token_key(path_token_key):
             return token_key
     except FileNotFoundError as err:
         logger.error(f'FileNotFoundError: no credentials.txt in {path_token_key}: {err}')
-        raise FileNotFoundError
+        raise FileNotFoundError(f'FileNotFoundError: no credentials.txt in {path_token_key}: {err}')
     except jwk.InvalidJWKValue as err:
         logger.error(f'InvalidJWKValue: data in {path_token_key} is not JWK object')     
-        raise TypeError   
+        raise TypeError(f'InvalidJWKValue: data in {path_token_key} is not JWK object')   
     
-class Token:
+class Token_gen:
 
     def __init__(self, path_token_key):
         self.load_key = load_token_key(path_token_key)

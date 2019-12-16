@@ -1,6 +1,6 @@
 import pytest, os
 from unittest import mock
-from auth import load_token_key, Token, logger
+from auth import load_token_key, Token_gen, logger
 from freezegun import freeze_time
 from datetime import datetime, timedelta
 
@@ -25,7 +25,7 @@ def test_load_key_normal_case():
     assert test_token_key.export() == '{"k":"foo","kty":"oct"}'
 
 def test_class_Token_create_and_check_token_normal_case():
-    test_token_object  = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    test_token_object  = Token_gen(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     str_token = test_token_object.create_new_token('testname', 30)
     assert str_token.count('.') == 2
     assert test_token_object.check_token(str_token) is True
@@ -42,10 +42,10 @@ def test_class_Token_create_and_check_token_normal_case():
 def test_class_Tokem_check_token_all_error_cases(n_case, expected_str):
     token_case_list = [0,0,0]
 
-    main_token_object = Token(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    main_token_object = Token_gen(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     token_case_list[0] = main_token_object.create_new_token('testname', 30)
     
-    other_key_token_object = Token(os.path.dirname(os.path.realpath(__file__)) + '/other_test_token_key.txt')
+    other_key_token_object = Token_gen(os.path.dirname(os.path.realpath(__file__)) + '/other_test_token_key.txt')
     token_case_list[1] = other_key_token_object.create_new_token('testname', 60)
 
     token_case_list[2] = 'this_string_is_not_JSON_Web_token'

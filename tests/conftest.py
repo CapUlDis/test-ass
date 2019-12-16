@@ -5,7 +5,8 @@ from main import create_app, login
 
 @pytest.fixture
 def app():
-    os.environ['todoappcredits'] = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/credentials.txt'
+    os.environ['tda_credits'] = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/credentials.txt'
+    os.environ['tda_token_key'] = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/token_key.txt'
     app = create_app()
     yield app
 

@@ -11,7 +11,7 @@ from unittest import mock
                 (json.dumps({"exp1": "exp2", "exp3": "exp4"}), {'content-type': 'application/json'}, b'Name or/and password are missing.', 400),
                 (json.dumps({"name" : 78 , "password" : "bar" }), {'content-type': 'application/json'}, b'Name is not a string.', 400),
                 (json.dumps({"name" : "foo" , "password" : 55 }), {'content-type': 'application/json'}, b'Password is not a string.', 400),
-                (json.dumps({"name": "denchik", "password": "foobar"}), {'content-type': 'application/json'}, b'Correct name and password.', 200),
+                (json.dumps({"name": "denchik", "password": "foobar"}), {'content-type': 'application/json'}, b"token", 200),
                 (json.dumps({"name": "den", "password": "foobar"}), {'content-type': 'application/json'}, b'Invalid name or password.', 403),
                 (json.dumps({"name": "denchik", "password": "foo"}), {'content-type': 'application/json'}, b'Invalid name or password.', 403),
                 
