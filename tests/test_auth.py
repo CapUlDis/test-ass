@@ -35,12 +35,13 @@ def test_class_Token_create_and_check_token_normal_case():
     (
         (0, 'JWTExpired: token is expired'),
         (1, 'InvalidJWSSignature: token has invalid signature'),
-        (2, 'ValueError: received string is not JSON Web Token')
+        (2, 'ValueError: received string is not JSON Web Token'),
+        (3, 'InvalidJWSObject: invalid token format')
     ),
-    ids = ['Expired token', 'Token has invalid signature', 'Received string is not JSON Web Token']
+    ids = ['Expired token', 'Token has invalid signature', 'Received string is not JSON Web Token', 'Invalid token format']
 )    
 def test_class_Tokem_check_token_all_error_cases(n_case, expected_str):
-    token_case_list = [0,0,0]
+    token_case_list = [0,0,0,0]
 
     main_token_object = Token_gen(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     token_case_list[0] = main_token_object.create_new_token('testname', 30)
@@ -49,6 +50,8 @@ def test_class_Tokem_check_token_all_error_cases(n_case, expected_str):
     token_case_list[1] = other_key_token_object.create_new_token('testname', 60)
 
     token_case_list[2] = 'this_string_is_not_JSON_Web_token'
+
+    token_case_list[3] = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzY2NjMwNTUsInVzZXIiOiJkZW5jaGlrIn0.2NcVvhXPkNCmHMKa2DE4ugVImklZEgI6GWOjN3UY-B4'
 
     with freeze_time(datetime.utcnow() + timedelta(minutes = 31)):
         with mock.patch.object(logger, 'info') as mock_info:

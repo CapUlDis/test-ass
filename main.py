@@ -32,15 +32,29 @@ def login():
     if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
         return 'Invalid name or password.', 403
         
-    return jsonify({'token': current_app.token.create_new_token(data['name'], current_app.token_exp)}), 200
+    return jsonify({'token': current_app.token_gen.create_new_token(data['name'], current_app.token_exp)}), 200
 
+def sign_in():
     
+    try:
+        token = request.headers['Authorization']
+    except KeyError:
+        return 'Please log in again', 400
+    
+    if token is None:
+        return 'Please log in again', 401
+
+    if not current_app.token_gen.check_token(token):
+        return 'Please log in again', 403
+
+    return jsonify({'column': 'foobar'}), 200
+
 def create_app():
     app = Flask(__name__)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     app.add_url_rule('/my-todos', view_func=sign_in, methods=['POST'])
     app.credit = Credits(os.environ.get('TDA_CREDITS'))
-    app.token = Token_gen(os.environ.get('TDA_TOKEN_KEY'))
+    app.token_gen = Token_gen(os.environ.get('TDA_TOKEN_KEY'))
     app.token_exp = int(os.environ.get('TDA_TOKEN_EXPIRATION_MINUTES'))
     return app
 

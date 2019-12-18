@@ -38,8 +38,12 @@ class Token_gen:
         except jws.InvalidJWSSignature as inf:
             logger.info(f'InvalidJWSSignature: token has invalid signature: {inf}')
             return False
+        except jws.InvalidJWSObject as inf:
+            logger.info(f'InvalidJWSObject: invalid token format: {inf}')
+            return False
         except ValueError as inf:
             logger.info(f'ValueError: received string is not JSON Web Token: {inf}')
             return False
+        
 
 
