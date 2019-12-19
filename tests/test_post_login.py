@@ -1,5 +1,4 @@
 import pytest, json
-from unittest import mock
 
 
 @pytest.mark.parametrize(

@@ -7,7 +7,7 @@ from auth import Token_gen
 logging.basicConfig(filename="main.log", 
                     format='%(asctime)s %(message)s', 
                     filemode='w',
-                    level = logging.WARNING) 
+                    level = logging.INFO) 
 logger = logging.getLogger() 
 
 def login():
@@ -38,16 +38,52 @@ def sign_in():
     
     try:
         token = request.headers['Authorization']
-    except KeyError:
-        return 'Please log in again', 400
+    except KeyError as inf:
+        logger.info(f'In post request Authorization header missing: {inf}')
+        return 'Please log in again', 401
     
-    if token is None:
+    token = token.replace('Bearer ', '')
+
+    if token == '':
+        logger.info('In Authorization header token missing')
         return 'Please log in again', 401
 
     if not current_app.token_gen.check_token(token):
-        return 'Please log in again', 403
+        logger.info('Got invalid token')
+        return 'Please log in again', 401
 
-    return jsonify({'column': 'foobar'}), 200
+    return jsonify({
+        'userName': 'denchik',
+        'id': 1,
+        'numOfLists': 1,
+        'toDoLists': {
+            'listName': 'First to-do list',
+            'listDate': '19 Dec 2019',
+            'listColor': 'green',
+            'listItems': [
+                {
+                    'itemNum': 1,
+                    'itemName': 'Buy some milk',
+                    'itemTerm': 'today',
+                    'checkBox': False,
+                },
+                {
+                    'itemNum': 2,
+                    'itemName': 'Clean apartment',
+                    'itemTerm': None,
+                    'checkBox': False,
+                },
+                {
+                    'itemNum': 3,
+                    'itemName': 'Read about Flask framework',
+                    'itemTerm': '20 Dec 2019 11:00 AM',
+                    'checkBox': True,
+                }
+                        ],
+            'listTags': ['general', 'daily']
+                    }
+
+    }), 200
 
 def create_app():
     app = Flask(__name__)
@@ -62,3 +98,5 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     app.run()
+
+
