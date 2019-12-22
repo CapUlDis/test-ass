@@ -1,7 +1,7 @@
 import os, werkzeug, logging
 from flask import Flask, request, current_app, jsonify
 from credit import Credits
-from auth import Token_gen
+from auth import TokenGenerator
 
 
 logging.basicConfig(filename="main.log", 
@@ -90,7 +90,7 @@ def create_app():
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     app.add_url_rule('/my-todos', view_func=return_user_workspace, methods=['POST'])
     app.credit = Credits(os.environ.get('TDA_CREDITS'))
-    app.token_gen = Token_gen(os.environ.get('TDA_TOKEN_KEY'))
+    app.token_gen = TokenGenerator(os.environ.get('TDA_TOKEN_KEY'))
     app.token_exp = int(os.environ.get('TDA_TOKEN_EXPIRATION_MINUTES'))
     return app
 

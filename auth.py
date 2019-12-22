@@ -17,7 +17,7 @@ def load_token_key(path_token_key):
         logger.error(f'InvalidJWKValue: data in {path_token_key} is not JWK object')     
         raise TypeError(f'InvalidJWKValue: data in {path_token_key} is not JWK object')   
     
-class Token_gen:
+class TokenGenerator:
 
     def __init__(self, path_token_key):
         self.load_key = load_token_key(path_token_key)
