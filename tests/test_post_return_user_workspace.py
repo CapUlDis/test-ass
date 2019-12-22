@@ -20,8 +20,8 @@ def test_return_user_workspace_error_cases(client, app, headers, logger_message,
 
 def test_return_user_workspace_valid_token(client, app):
     response_login = client.post('/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'})
-    recieved_token = json.loads(response_login.data)
-    response_return_user_workspace = client.post('/my-todos', headers = {'Authorization': recieved_token['token']})    
+    received_token = json.loads(response_login.data)
+    response_return_user_workspace = client.post('/my-todos', headers = {'Authorization': received_token['token']})    
     assert 200 == response_return_user_workspace.status_code
     assert 'toDoLists' in str(response_return_user_workspace.data)
 

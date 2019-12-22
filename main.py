@@ -64,19 +64,19 @@ def return_user_workspace():
                 {
                     'itemNum': 1,
                     'itemName': 'Buy some milk',
-                    'itemTerm': 'today',
+                    'itemDeadline': 'today',
                     'checkBox': False,
                 },
                 {
                     'itemNum': 2,
                     'itemName': 'Clean apartment',
-                    'itemTerm': None,
+                    'itemDeadline': None,
                     'checkBox': False,
                 },
                 {
                     'itemNum': 3,
                     'itemName': 'Read about Flask framework',
-                    'itemTerm': '20 Dec 2019 11:00 AM',
+                    'itemDeadline': '20 Dec 2019 11:00 AM',
                     'checkBox': True,
                 }
                         ],
