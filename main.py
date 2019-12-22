@@ -34,7 +34,7 @@ def login():
         
     return jsonify({'token': current_app.token_gen.create_new_token(data['name'], current_app.token_exp)}), 200
 
-def sign_in():
+def return_user_workspace():
     
     try:
         token = request.headers['Authorization']
@@ -88,7 +88,7 @@ def sign_in():
 def create_app():
     app = Flask(__name__)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
-    app.add_url_rule('/my-todos', view_func=sign_in, methods=['POST'])
+    app.add_url_rule('/my-todos', view_func=return_user_workspace, methods=['POST'])
     app.credit = Credits(os.environ.get('TDA_CREDITS'))
     app.token_gen = Token_gen(os.environ.get('TDA_TOKEN_KEY'))
     app.token_exp = int(os.environ.get('TDA_TOKEN_EXPIRATION_MINUTES'))
