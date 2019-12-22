@@ -27,7 +27,6 @@ def test_load_key_normal_case():
 def test_class_TokenGenerator_create_and_check_token_normal_case():
     test_token_object  = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
     str_token = test_token_object.create_new_token('testname', 30)
-    assert str_token.count('.') == 2
     assert test_token_object.check_token(str_token) is True
 
 @pytest.mark.parametrize(
