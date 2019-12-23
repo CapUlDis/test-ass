@@ -39,14 +39,14 @@ def return_user_workspace():
     try:
         token = request.headers['Authorization']
     except KeyError as inf:
-        logger.info(f'In post request Authorization header missing: {inf}')
-        return 'Please log in again', 401
+        logger.info(f'In POST request Authorization header is missing: {inf}')
+        return 'In POST request Authorization header is missing', 401
     
     token = token.replace('Bearer ', '')
 
     if token == '':
-        logger.info('In Authorization header token missing')
-        return 'Please log in again', 401
+        logger.info('In Authorization header token is missing')
+        return 'In Authorization header token is missing', 401
 
     if not current_app.token_gen.check_token(token):
         logger.info('Got invalid token')
@@ -55,10 +55,9 @@ def return_user_workspace():
     return jsonify({
         'userName': 'denchik',
         'id': 1,
-        'numOfLists': 1,
         'toDoLists': {
             'listName': 'First to-do list',
-            'listDate': '19 Dec 2019',
+            'creationDate': '19 Dec 2019',
             'listColor': 'green',
             'listItems': [
                 {
