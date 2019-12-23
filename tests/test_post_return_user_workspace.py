@@ -22,9 +22,39 @@ def test_return_user_workspace_error_cases(client, app, headers, logger_message,
 def test_return_user_workspace_valid_token(client, app):
     response_login = client.post('/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'})
     received_token = json.loads(response_login.data)
-    response_return_user_workspace = client.post('/my-todos', headers = {'Authorization': received_token['token']})    
+    response_return_user_workspace = client.post('/my-todos', headers = {'Authorization': received_token['token']})
+    returning_json_object = {
+        'userName': 'denchik',
+        'id': 1,
+        'toDoLists': {
+            'listName': 'First to-do list',
+            'creationDate': '19 Dec 2019',
+            'listColor': 'green',
+            'listItems': [
+                {
+                    'itemNum': 1,
+                    'itemName': 'Buy some milk',
+                    'itemDeadline': 'today',
+                    'checkBox': False,
+                },
+                {
+                    'itemNum': 2,
+                    'itemName': 'Clean apartment',
+                    'itemDeadline': None,
+                    'checkBox': False,
+                },
+                {
+                    'itemNum': 3,
+                    'itemName': 'Read about Flask framework',
+                    'itemDeadline': '20 Dec 2019 11:00 AM',
+                    'checkBox': True,
+                }
+                        ],
+            'listTags': ['general', 'daily']
+                    }
+    }    
     assert 200 == response_return_user_workspace.status_code
-    assert 'toDoLists' in str(response_return_user_workspace.data)
+    assert returning_json_object == response_return_user_workspace.json
 
 
     

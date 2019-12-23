@@ -81,7 +81,6 @@ def return_user_workspace():
                         ],
             'listTags': ['general', 'daily']
                     }
-
     }), 200
 
 def create_app():
