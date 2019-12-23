@@ -14,22 +14,28 @@ def login():
     
     try:
         data = request.get_json()
-    except werkzeug.exceptions.BadRequest:
+    except werkzeug.exceptions.BadRequest as inf:
+        logger.info(f'Received data is not in json format: {inf}')
         return 'Data is not in json format.', 400
     
     if data is None:
+        logger.info('In POST request Content-Type header is not json.')
         return 'Content-Type is not json.', 400
         
     if 'name' not in data or 'password' not in data:
+        logger.info('In POST request name or/and password are missing.')
         return 'Name or/and password are missing.', 400
 
     if not isinstance(data['name'], str):
+        logger.info('In POST request name is not a string.')
         return 'Name is not a string.', 400
 
     if not isinstance(data['password'], str):
+        logger.info('In POST request password is not a string.')
         return 'Password is not a string.', 400
 
     if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
+        logger.info('In POST request name or password is invalid.')
         return 'Invalid name or password.', 403
         
     return jsonify({'token': current_app.token_gen.create_new_token(data['name'], current_app.token_exp)}), 200
@@ -39,18 +45,18 @@ def return_user_workspace():
     try:
         token = request.headers['Authorization']
     except KeyError as inf:
-        logger.info(f'In POST request Authorization header is missing: {inf}')
-        return 'In POST request Authorization header is missing', 401
+        logger.info(f'In POST request Authorization header is missing: {inf}.')
+        return 'In POST request Authorization header is missing.', 401
     
     token = token.replace('Bearer ', '')
 
     if token == '':
-        logger.info('In Authorization header token is missing')
-        return 'In Authorization header token is missing', 401
+        logger.info('In Authorization header token is missing.')
+        return 'In Authorization header token is missing.', 401
 
     if not current_app.token_gen.check_token(token):
-        logger.info('Got invalid token')
-        return 'Please log in again', 401
+        logger.info('Got invalid token.')
+        return 'Please log in again.', 401
 
     return jsonify({
         'userName': 'denchik',

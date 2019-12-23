@@ -7,8 +7,8 @@ from unittest import mock
     ('headers', 'logger_message', 'returned_message', 'http_code'),
     (
         ('', 'In POST request Authorization header is missing', b'In POST request Authorization header is missing', 401),
-        ({'Authorization': 'Bearer '}, 'In Authorization header token is missing', b'In Authorization header token is missing', 401),
-        ({'Authorization': 'Bearer eyJhbGciOiJIJ9.eyJzdWIiOifQ.SflKxwQssw5c'}, 'Got invalid token', b'Please log in again', 401)
+        ({'Authorization': 'Bearer '}, 'In Authorization header token is missing', b'In Authorization header token is missing.', 401),
+        ({'Authorization': 'Bearer eyJhbGciOiJIJ9.eyJzdWIiOifQ.SflKxwQssw5c'}, 'Got invalid token', b'Please log in again.', 401)
     ),
     ids = ['No header case', 'Empty header Authorization', 'Invalid token in header']
 )

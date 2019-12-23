@@ -33,16 +33,16 @@ class TokenGenerator:
             jwt.JWT(key = self.load_key, jwt = token)
             return True
         except jwt.JWTExpired as inf:
-            logger.info(f'JWTExpired: token is expired: {inf}')
+            logger.info(f'JWTExpired: token is expired: {inf}.')
             return False
         except jws.InvalidJWSSignature as inf:
-            logger.info(f'InvalidJWSSignature: token has invalid signature: {inf}')
+            logger.info(f'InvalidJWSSignature: token has invalid signature: {inf}.')
             return False
         except jws.InvalidJWSObject as inf:
-            logger.info(f'InvalidJWSObject: invalid token format: {inf}')
+            logger.info(f'InvalidJWSObject: invalid token format: {inf}.')
             return False
         except ValueError as inf:
-            logger.info(f'ValueError: received string is not JSON Web Token: {inf}')
+            logger.info(f'ValueError: received string is not JSON Web Token: {inf}.')
             return False
         
 
