@@ -1,4 +1,4 @@
-import os, sys, json, logging
+import os, json, logging
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -9,22 +9,22 @@ def load_credits(path_credit):
         with open(path_credit) as f:
             credit = json.load(f)
             if not isinstance(credit, dict):
-                logger.error('Data in credentials.txt is not dictionary or malformed')
-                raise TypeError
+                logger.error('Data in credentials.txt is not dictionary or malformed.')
+                raise TypeError('Data in credentials.txt is not dictionary or malformed.')
             v = 0
             for value in credit.values():
                 if not isinstance(value, str):
                     v += 1
             if v > 0:
-                logger.error(f'TypeError: {v} values in credit dictionary are not string')
-                raise TypeError
+                logger.error(f'TypeError: {v} values in credit dictionary are not string.')
+                raise TypeError(f'TypeError: {v} values in credit dictionary are not string.')
             return credit
     except FileNotFoundError as err:
-        logger.error(f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.realpath(__file__))}: {err}')
-        raise FileNotFoundError
+        logger.error(f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.realpath(__file__))}: {err}.')
+        raise FileNotFoundError(f'FileNotFoundError: no credentials.txt in {os.path.dirname(os.path.realpath(__file__))}: {err}.')
     except json.decoder.JSONDecodeError as err:
-        logger.error(f'JSONDecodeError: data in credentials.txt is not json: {err}')
-        raise TypeError
+        logger.error(f'JSONDecodeError: data in credentials.txt is not json: {err}.')
+        raise TypeError(f'JSONDecodeError: data in credentials.txt is not json: {err}.')
     
 class Credits:
     
