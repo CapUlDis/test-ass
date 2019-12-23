@@ -29,30 +29,33 @@ def test_class_TokenGenerator_create_and_check_token_normal_case():
     str_token = test_token_object.create_new_token('testname', 30)
     assert test_token_object.check_token(str_token) is True
 
-@pytest.mark.parametrize(
-    ('n_case', 'expected_str'),
-    (
-        (0, 'JWTExpired: token is expired'),
-        (1, 'InvalidJWSSignature: token has invalid signature'),
-        (2, 'ValueError: received string is not JSON Web Token'),
-        (3, 'InvalidJWSObject: invalid token format')
-    ),
-    ids = ['Expired token', 'Token has invalid signature', 'Received string is not JSON Web Token', 'Invalid token format']
-)    
-def test_class_TokenGenerator_check_token_all_error_cases(n_case, expected_str):
-    token_case_list = [0,0,0,0]
-
-    main_token_object = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
-    token_case_list[0] = main_token_object.create_new_token('testname', 30)
-    
-    other_key_token_object = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/other_test_token_key.txt')
-    token_case_list[1] = other_key_token_object.create_new_token('testname', 60)
-
-    token_case_list[2] = 'this_string_is_not_JSON_Web_token'
-
-    token_case_list[3] = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzY2NjMwNTUsInVzZXIiOiJkZW5jaGlrIn0.2NcVvhXPkNCmHMKa2DE4ugVImklZEgI6GWOjN3UY-B4'
-
+def test_class_TokenGenerator_check_token_expired_token():
+    test_token_object = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    expired_token = test_token_object.create_new_token('testname', 30)
     with freeze_time(datetime.utcnow() + timedelta(minutes = 31)):
         with mock.patch.object(logger, 'info') as mock_info:
-            assert main_token_object.check_token(token_case_list[n_case]) is False
-            assert expected_str in mock_info.call_args[0][0]
+            assert test_token_object.check_token(expired_token) is False
+            assert 'JWTExpired: token is expired' in mock_info.call_args[0][0]
+
+def test_class_TokenGenerator_check_token_invalid_signature():
+    main_token_object = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    other_token_object = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/other_test_token_key.txt')
+    token_with_invalid_signature = other_token_object.create_new_token('testname', 30)
+    with mock.patch.object(logger, 'info') as mock_info:
+        assert main_token_object.check_token(token_with_invalid_signature) is False
+        assert 'InvalidJWSSignature: token has invalid signature' in mock_info.call_args[0][0]
+
+@pytest.mark.parametrize(
+    ('invalid_token_string', 'logger_message'),
+    (
+        ('this_string_is_not_JSON_Web_token', 'ValueError: received string is not JSON Web Token'),
+        ('Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzY2NjMwNTUsInVzZXIiOiJkZW5jaGlrIn0.2NcVvhXPkNCmHMKa2DE4ugVImklZEgI6GWOjN3UY-B4', 'InvalidJWSObject: invalid token format')
+    ),
+    ids = ['Received string is not JSON Web Token', 'Invalid token format']
+)
+def test_class_TokenGenerator_check_token_invalid_data_format(invalid_token_string, logger_message):
+    test_token_object = TokenGenerator(os.path.dirname(os.path.realpath(__file__)) + '/test_token_key.txt')
+    with mock.patch.object(logger, 'info') as mock_info:
+        assert test_token_object.check_token(invalid_token_string) is False
+        assert logger_message in mock_info.call_args[0][0]
+
