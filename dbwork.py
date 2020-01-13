@@ -1,11 +1,17 @@
 from sqlalchemy import create_engine
-engine = create_engine('postgresql://tester:foobar@localhost/testo', echo=True)
-
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, String
+
+
+engine = create_engine('postgresql://test_1:foobar@localhost/test_1', echo=True)
 
 Base = declarative_base()
 
-from sqlalchemy import Column, Integer, String
+Session = sessionmaker(bind=engine)
+
+session = Session()
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -18,13 +24,18 @@ class User(Base):
        return "<User(name='%s', fullname='%s', nickname='%s')>" % (
                             self.name, self.fullname, self.nickname)
 
-ed_user = User(name='ed', fullname='Ed Jones', nickname='edsnickname')
+Base.metadata.create_all(engine)
 
-from sqlalchemy.orm import sessionmaker
-Session = sessionmaker(bind=engine)
 
-session = Session()
+'''ed_user = User(name='ed', fullname='Ed Jones', nickname='edsnickname')
 
 session.add(ed_user)
 
-our_user = session.query(User).filter_by(name='ed').first()
+session.commit()'''
+
+session.add_all([
+    User(name='wendy', fullname='Wendy Williams', nickname='windy'),
+    User(name='mary', fullname='Mary Contrary', nickname='mary'),
+    User(name='fred', fullname='Fred Flintstone', nickname='freddy')])
+
+session.commit()
