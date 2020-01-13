@@ -1,7 +1,8 @@
 #!/bin/bash
 
 
-sudo -i -u postgres createdb todoapp_devel
-sudo -i -u postgres createdb todoapp_test
+createdb todoapp_devel
+createdb todoapp_test
 
-sudo -i -u postgres createuser -s todoapp_user
+psql -c "CREATE ROLE todoapp_user PASSWORD 'tdapp8' CREATEDB CREATEROLE LOGIN"
+psql -c "GRANT CREATE, CONNECT, TEMP ON DATABASE todoapp_devel, todoapp_test TO todoapp_user"

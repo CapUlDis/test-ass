@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-engine = create_engine('postgresql://todoapp_user@localhost/testo', echo=True)
+engine = create_engine('postgresql://tester:foobar@localhost/testo', echo=True)
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -22,8 +22,6 @@ ed_user = User(name='ed', fullname='Ed Jones', nickname='edsnickname')
 
 from sqlalchemy.orm import sessionmaker
 Session = sessionmaker(bind=engine)
-
-Session.configure(bind=engine)
 
 session = Session()
 
