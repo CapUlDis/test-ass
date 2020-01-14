@@ -9,11 +9,11 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    Name = Column(String)
-    Passwordhash = Column(String)
-    Useremail = Column(String)
+    name = Column(String)
+    passwordhash = Column(String)
+    useremail = Column(String)
 
     def __repr__(self):
-       return "<User(Name='%s', Passwordhash='%s', Useremail='%s')>" % (
-                            self.Name, self.Passwordhash, self.Useremail)
+       return "<User(name='%s', passwordhash='%s', useremail='%s')>" % (
+                            self.name, self.passwordhash, self.useremail)
 
