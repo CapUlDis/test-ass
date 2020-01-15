@@ -1,5 +1,5 @@
 import pytest, os
-from credit import load_credits, Credits, logger
+from credit import load_credits, Credits, check_user_with_password_exists_sqldb, logger
 from unittest import mock
 
 
@@ -37,3 +37,15 @@ def test_class_Credits(name, password, result):
     test_credit = Credits(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/credentials.txt')
     assert test_credit.check_user_with_password_exists(name, password) is result
     
+@pytest.mark.parametrize(
+    ('name', 'password', 'result'),
+    (
+        ('denchik', 'foobar', True),
+        ('denchik', 'foo', False),
+        ('den', 'foobar', False),
+        ('den', 'foo', False),
+    ),
+    ids = ['Correct credentials', 'Invalid password', 'Invalid name', 'Invalid name and password']
+)
+def test_check_user_with_password_exists_sqldb(name, password, result):
+    assert check_user_with_password_exists_sqldb(name, password) is result

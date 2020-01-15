@@ -1,16 +1,11 @@
 import os, json, logging
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from models import User
+from main import current_app
 
 
 logger = logging.getLogger(__file__)
-
-engine = create_engine('postgresql://todoapp_user:tdapp8@localhost/todoapp_devel', echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 
 def load_credits(path_credit):
@@ -46,7 +41,7 @@ class Credits:
         return check_password_hash(self.load[name], password)
 
 def check_user_with_password_exists_sqldb(name, password):
-    query = session.query(User).filter(User.name == name)
+    query = current_app.db_session.query(User).filter(User.name == name)
     try:
         query.one()
     except NoResultFound as err:
