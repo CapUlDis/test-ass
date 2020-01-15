@@ -1,6 +1,6 @@
 import os, werkzeug, logging
 from flask import Flask, request, current_app, jsonify
-from credit import Credits
+from credit import Credits, check_user_with_password_exists_sqldb
 from auth import TokenGenerator
 
 
@@ -34,7 +34,7 @@ def login():
         logger.info('In POST request password is not a string.')
         return 'Password is not a string.', 400
 
-    if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
+    if not check_user_with_password_exists_sqldb(data['name'], data['password']):
         logger.info('In POST request name or password is invalid.')
         return 'Invalid name or password.', 403
         
