@@ -1,8 +1,17 @@
 import os, json, logging
 from werkzeug.security import generate_password_hash, check_password_hash
+from models import User
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 
 logger = logging.getLogger(__file__)
+
+engine = create_engine('postgresql://todoapp_user:tdapp8@localhost/todoapp_devel', echo=True)
+Session = sessionmaker(bind=engine)
+session = Session()
+
 
 def load_credits(path_credit):
     try:
@@ -35,4 +44,18 @@ class Credits:
         if name not in self.load:
             return False
         return check_password_hash(self.load[name], password)
+
+def check_user_with_password_exists_sqldb(name, password):
+    query = session.query(User).filter(User.name == name)
+    try:
+        query.one()
+    except NoResultFound as err:
+        logger.info(f'NoResultFound: no such username in database: {err}.')
+        return False
+    except MultipleResultsFound as err:
+        logger.error(f'MultipleResultsFound: database has more than one users with such name: {err}.')
+        raise LookupError(f'MultipleResultsFound: database has more than one users with such name: {err}.')
+    else:
+        return check_password_hash(query.one().passwordhash, password)
+
 
