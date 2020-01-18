@@ -6,7 +6,7 @@ jobs:
       - image: circleci/python:3.6.4
               
       - image: circleci/postgres:9.6.5-alpine-ram
-      environment:
+        environment:
           TDA_DB_USER: todoapp_user
           TDA_DB_TEST: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
       
