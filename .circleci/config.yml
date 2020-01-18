@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout  # checkout source code to working directory
       - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-9.6
+      - run: sudo apt-get install postgresql-client-11
       - run: whoami
       - run: |
           psql \
