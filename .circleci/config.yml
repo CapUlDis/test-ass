@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: circleci/python:3.6.4
               
-      - image: circleci/postgres:12.1-ram
+      - image: circleci/postgres:12.1-ram 
         environment:
           TDA_DB_USER: todoapp_user
           TDA_DB_TEST: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout  # checkout source code to working directory
       - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-11
+      - run: sudo apt-get install postgresql-client-10
       - run: whoami
       - run: |
           psql \
