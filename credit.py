@@ -8,8 +8,6 @@ from models import User
 
 logger = logging.getLogger(__file__)
 
-db_session = sessionmaker(bind=create_engine(os.environ.get('TDA_DB'), echo=True))()
-
 
 def load_credits(path_credit):
     try:
@@ -44,6 +42,7 @@ class Credits:
         return check_password_hash(self.load[name], password)
 
 def check_user_with_password_exists_sqldb(name, password):
+    db_session = sessionmaker(bind=create_engine(os.environ.get('TDA_DB'), echo=True))()
     query = db_session.query(User).filter(User.name == name)
     try:
         query.one()
