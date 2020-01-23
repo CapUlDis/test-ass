@@ -18,12 +18,15 @@ class User(Base):
        return "<User(name='%s', passwordhash='%s', useremail='%s')>" % (
                             self.name, self.passwordhash, self.useremail)
 
-    def create_table_in_db(db_url):
-        engine = create_engine(db_url, echo=True)
-        Base.metadata.create_all(bind=engine)
+    def start_engine(self, db_url):
+        self.engine = create_engine(db_url)
 
-    def add_new_user_in_db(self, db_url, name, passwordhash, useremail):
-        new_user = self(name=name, passwordhash=passwordhash, useremail=useremail)
-        db_session = sessionmaker(bind=create_engine(db_url, echo=True))()
-        db_session.add(new_user).commit()
+    def create_table_in_db(self):
+        self.__table__.create(bind=self.engine)
+
+    def add_new_user_in_db(self, name, passwordhash, useremail):
+        new_user = self.__class__(name=name, passwordhash=passwordhash, useremail=useremail)
+        db_session = sessionmaker(bind=self.engine)()
+        db_session.add(new_user)
+        db_session.commit()
 
