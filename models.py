@@ -15,8 +15,7 @@ class User(Base):
     useremail = Column(String)
 
     def __repr__(self):
-       return "<User(name='%s', passwordhash='%s', useremail='%s')>" % (
-                            self.name, self.passwordhash, self.useremail)
+        return f'<User(name={self.name}, passwordhash={self.passwordhash}, useremail={self.useremail})>'
 
     def start_engine(self, db_url):
         self.engine = create_engine(db_url)
