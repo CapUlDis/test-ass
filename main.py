@@ -1,5 +1,7 @@
 import os, werkzeug, logging
 from flask import Flask, request, current_app, jsonify
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from credit import Credits, check_user_with_password_exists_sqldb
 from auth import TokenGenerator
 
@@ -9,6 +11,8 @@ logging.basicConfig(filename="main.log",
                     filemode='w',
                     level = logging.INFO) 
 logger = logging.getLogger() 
+
+engine = create_engine(os.environ.get('TDA_DB'))
 
 
 def login():
@@ -92,6 +96,7 @@ def return_user_workspace():
 
 def create_app():
     app = Flask(__name__)
+    app.Session = sessionmaker(bind=engine)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     app.add_url_rule('/my-todos', view_func=return_user_workspace, methods=['POST'])
     app.credit = Credits(os.environ.get('TDA_CREDITS'))

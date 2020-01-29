@@ -1,8 +1,7 @@
 import os, json, logging
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from flask import current_app
 from models import User
 
 
@@ -42,7 +41,7 @@ class Credits:
         return check_password_hash(self.load[name], password)
 
 def check_user_with_password_exists_sqldb(name, password):
-    db_session = sessionmaker(bind=create_engine(os.environ.get('TDA_DB'), echo=True))()
+    db_session = current_app.Session()
     query = db_session.query(User).filter(User.name == name)
     try:
         query.one()

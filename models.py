@@ -1,6 +1,6 @@
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from flask import current_app
 
 
 Base = declarative_base()
@@ -17,15 +17,9 @@ class User(Base):
     def __repr__(self):
         return f'<User(name={self.name}, passwordhash={self.passwordhash}, useremail={self.useremail})>'
 
-    def start_engine(self, db_url):
-        self.engine = create_engine(db_url)
-
-    def create_table_in_db(self):
-        self.__table__.create(bind=self.engine)
-
     def add_new_user_in_db(self, name, passwordhash, useremail):
         new_user = self.__clasls__(name=name, passwordhash=passwordhash, useremail=useremail)
-        db_session = sessionmaker(bind=self.engine)()
+        db_session = current_app.Session()
         db_session.add(new_user)
         db_session.commit()
 

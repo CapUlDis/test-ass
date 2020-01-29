@@ -8,7 +8,6 @@ os.environ['TDA_TOKEN_KEY'] = os.path.dirname(os.path.dirname(os.path.realpath(_
 os.environ['TDA_TOKEN_EXPIRATION_MINUTES'] = '30'
 
 
-from flask import current_app
 from main import create_app, login
 
 
