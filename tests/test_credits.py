@@ -47,5 +47,6 @@ def test_class_Credits(name, password, result):
     ),
     ids = ['Correct credentials', 'Invalid password', 'Invalid name', 'Invalid name and password']
 )
-def test_check_user_with_password_exists_sqldb(name, password, result):
-    assert check_user_with_password_exists_sqldb(name, password) is result
+def test_check_user_with_password_exists_sqldb(app, name, password, result):
+    with app.app_context():
+        assert check_user_with_password_exists_sqldb(name, password) is result
