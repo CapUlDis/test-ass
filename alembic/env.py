@@ -57,12 +57,11 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
+    print(os.environ.get('TDA_DB'))
     connectable = create_engine(os.environ.get('TDA_DB'))
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

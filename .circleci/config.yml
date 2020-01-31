@@ -5,32 +5,29 @@ jobs:
     docker:
       - image: circleci/python:3.6.4
         environment:
-          PG_USER_DB: postgresql://postgres@localhost/circle_test
+          USER: postgresql://postgres@localhost/postgres
           TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
-              
       - image: circleci/postgres:9.4.25-ram
-      
+        environment:
+          USER: postgresql://postgres@localhost/postgres
+          TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
     steps:
       - checkout  # checkout source code to working directory
       - run: sudo apt update
       - run: sudo apt install postgresql-client-9.4
-      - run: whoami
-      - run: |
-          psql \
-            -d $PG_USER_DB \
-            -c "CREATE DATABASE todoapp_test;"
-      - run: |
-          psql \
-            -d $PG_USER_DB \
-            -c "CREATE USER todoapp_user WITH CREATEDB CREATEROLE PASSWORD 'tdapp8';"
-      - run: |
-          psql \
-            -d $PG_USER_DB \
-            -c "GRANT CREATE, CONNECT, TEMP ON DATABASE todoapp_test TO todoapp_user;"
-      - run: |
-          psql \
-            -d $TDA_DB \
-            -c "CREATE TABLE users (id int NOT NULL, name varchar(80), passwordhash varchar(255), useremail varchar(80), PRIMARY KEY(id));"
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            sudo make install-test-requirements
+      - run: source dbsetup.sh
+      - run: 
+          name: Run base migration
+          command: sudo alembic upgrade head
+          environment:
+            TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
+
       - run: |
           psql \
             -d $TDA_DB \
@@ -39,12 +36,6 @@ jobs:
           psql \
             -d $TDA_DB \
             -c "SELECT * FROM users;"    
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            make install-test-requirements
       - run:
           name: run tests
           command: |
