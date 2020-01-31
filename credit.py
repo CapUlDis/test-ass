@@ -21,5 +21,3 @@ def check_user_with_password_exists(name, password):
         raise LookupError(f'MultipleResultsFound: database has more than one users with such name: {err}.')
     else:
         return check_password_hash(query.one().passwordhash, password)
-
-

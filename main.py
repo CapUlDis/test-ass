@@ -12,7 +12,7 @@ logging.basicConfig(filename="main.log",
                     level = logging.INFO) 
 logger = logging.getLogger() 
 
-engine = create_engine(os.environ.get('TDA_DB'))
+engine = create_engine(os.environ.get('TDA_DB'), echo=True)
 
 
 def login():
