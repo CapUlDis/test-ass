@@ -9,6 +9,9 @@ os.environ['TDA_TOKEN_EXPIRATION_MINUTES'] = '30'
 
 
 from main import create_app, login
+from flask import current_app
+from models import User
+
 
 
 @pytest.fixture
@@ -22,3 +25,19 @@ def client(app):
     """A test client for the app."""
     app.testing = True
     return app.test_client()
+
+
+@pytest.fixture(autouse=False)
+def set_db(app):
+    with app.app_context():
+        test_session = current_app.Session()
+        test_user_1 = User(name='denchik', passwordhash='pbkdf2:sha256:150000$wHwsgiLd$6979f267446c0e3d2797c21006f9272c3e19d5c70925d87989983ab3826350d8', useremail='foo@bar.baz')
+        test_user_2 = User(name='foo', passwordhash='bar', useremail='baz')
+        test_user_3 = User(name='foo', passwordhash='quux', useremail='bat')
+        test_session.add_all([test_user_1, test_user_2, test_user_3])
+        test_session.commit()
+        yield None
+        test_session.delete(test_user_1)
+        test_session.delete(test_user_2)
+        test_session.delete(test_user_3)
+        test_session.commit()
