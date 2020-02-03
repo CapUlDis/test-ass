@@ -1,7 +1,20 @@
 import pytest, json
 from unittest import mock
+from flask import current_app
 from main import logger
+from models import User
 
+
+@pytest.fixture(autouse=True)
+def set_db(app):
+    with app.app_context():
+        test_session = current_app.Session()
+        test_user = User(name='denchik', passwordhash='pbkdf2:sha256:150000$wHwsgiLd$6979f267446c0e3d2797c21006f9272c3e19d5c70925d87989983ab3826350d8', useremail='foo@bar.baz')
+        test_session.add(test_user)
+        test_session.commit()
+        yield None
+        test_session.delete(test_user)
+        test_session.commit()
 
 @pytest.mark.parametrize(
         ('data', 'headers', 'logger_message', 'message', 'http_code'),
