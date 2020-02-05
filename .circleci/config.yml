@@ -25,7 +25,7 @@ jobs:
       - run: 
           name: Run base migration
           command: |
-            sudo alembic upgrade head
+            python3 circleci_env.py   
           environment:
             TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
 
