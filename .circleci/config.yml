@@ -24,7 +24,8 @@ jobs:
       - run: source dbsetup.sh
       - run: 
           name: Run base migration
-          command: sudo alembic upgrade head
+          command: |
+            sudo alembic upgrade head
           environment:
             TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
 
