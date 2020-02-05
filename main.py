@@ -12,8 +12,6 @@ logging.basicConfig(filename="main.log",
                     level = logging.INFO) 
 logger = logging.getLogger() 
 
-engine = create_engine(os.environ.get('TDA_DB'), echo=True)
-
 
 def login():
     
@@ -96,7 +94,8 @@ def return_user_workspace():
 
 def create_app():
     app = Flask(__name__)
-    app.Session = sessionmaker(bind=engine)
+    app.engine = create_engine(os.environ.get('TDA_DB'), echo=True)
+    app.Session = sessionmaker(bind=app.engine)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     app.add_url_rule('/my-todos', view_func=return_user_workspace, methods=['POST'])
     app.token_gen = TokenGenerator(os.environ.get('TDA_TOKEN_KEY'))
