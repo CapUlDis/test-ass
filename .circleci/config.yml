@@ -4,39 +4,26 @@ jobs:
     working_directory: ~/to-do-app
     docker:
       - image: circleci/python:3.6.4
-        environment:
-          USER: postgresql://postgres@localhost/postgres
-          TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
       - image: circleci/postgres:9.4.25-ram
-        environment:
-          USER: postgresql://postgres@localhost/postgres
-          TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
     steps:
       - checkout  # checkout source code to working directory
       - run: sudo apt update
       - run: sudo apt install postgresql-client-9.4
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            sudo make install-test-requirements
-      - run: source dbsetup.sh
+            make install-test-requirements
       - run: 
-          name: Run base migration
+          name: Setup test database
           command: |
-            python3 circleci_env.py   
+            . venv/bin/activate
+            source dbsetup.sh
+            alembic upgrade head 
           environment:
-            TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test
-
-      - run: |
-          psql \
-            -d $TDA_DB \
-            -c "INSERT INTO users VALUES(1, 'denchik', 'pbkdf2:sha256:150000\$wHwsgiLd\$6979f267446c0e3d2797c21006f9272c3e19d5c70925d87989983ab3826350d8', 'capuldis@gmail.com');"
-      - run: |
-          psql \
-            -d $TDA_DB \
-            -c "SELECT * FROM users;"    
+            USER: postgresql://postgres@localhost/postgres
+            TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test  
       - run:
           name: run tests
           command: |
