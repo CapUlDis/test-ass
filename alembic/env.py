@@ -57,7 +57,6 @@ def run_migrations_online():
     and associate a connection with the context.
 
     """
-    print(os.environ.get('TDA_DB'))
     connectable = create_engine(os.environ.get('TDA_DB'))
 
     with connectable.connect() as connection:
