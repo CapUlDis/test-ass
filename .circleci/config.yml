@@ -20,12 +20,10 @@ jobs:
           command: |
             . venv/bin/activate
             source dbsetup.sh
-            alembic upgrade head 
           environment:
             USER: postgresql://postgres@localhost/postgres
-            TDA_DB: postgresql://todoapp_user:tdapp8@localhost/todoapp_test  
       - run:
-          name: run tests
+          name: Run tests
           command: |
             . venv/bin/activate
             make test
