@@ -1,5 +1,6 @@
-import logging
-from werkzeug.security import check_password_hash
+import logging, string, random
+from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.sql import exists
 from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from flask import current_app
@@ -27,3 +28,20 @@ def check_user_with_password_exists(name, password):
         return False
     session.close()
     return check_password_hash(query.passwordhash, password)
+
+def generate_password():
+    password = ''
+    for n in range(16):
+        x = random.randint(0,61)
+        password += string.printable[x]
+    return password
+
+def check_useremail_exist(useremail):
+    session = current_app.Session()
+    return session.query(exists().where(User.useremail == useremail)).scalar()
+
+def add_new_user_to_db(name, password, useremail):
+    session = current_app.Session()
+    passwordhash = generate_password_hash(password)
+    session.add(User(name=name, passwordhash=passwordhash, useremail=useremail))
+    session.commit()
