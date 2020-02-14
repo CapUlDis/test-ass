@@ -83,5 +83,6 @@ def test_check_useremail_missing_table(app, del_table_users_and_return_after_tes
 def test_add_new_user_to_db(app):
     with app.app_context():
         add_new_user_to_db('foo', 'test_pwhash', 'bar@bax.ru')
-        test_session = current_app.Session()
-        assert test_session.query(exists().where(and_(User.name == 'foo', User.useremail == 'bar@bax.ru'))).scalar()
+        session = current_app.Session()
+        assert session.query(exists().where(and_(User.name == 'foo', User.useremail == 'bar@bax.ru'))).scalar()
+        session.close()
