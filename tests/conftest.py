@@ -41,3 +41,4 @@ def set_db(app):
         test_session.delete(test_user_2)
         test_session.delete(test_user_3)
         test_session.commit()
+        test_session.close()
