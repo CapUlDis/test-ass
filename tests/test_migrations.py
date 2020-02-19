@@ -22,5 +22,6 @@ def test_alembic_downgrade_upgrade_migrations(app):
         assert 'users' not in insp_1.get_table_names()
         command.upgrade(alembic_cfg, 'head')
         insp_2 = inspect(current_app.engine)
+        recieved_names_of_columns = [column['name'] for column in insp_2.get_columns('users')]
         assert 'users' in insp_2.get_table_names()
-        assert User().__table__.columns.keys() == [insp_2.get_columns('users')[i]['name'] for i in range(len(insp_2.get_columns('users')))]
+        assert User().__table__.columns.keys() == recieved_names_of_columns

@@ -27,7 +27,7 @@ def client(app):
     return app.test_client()
 
 
-@pytest.fixture(autouse=False)
+@pytest.fixture()
 def set_db(app):
     with app.app_context():
         test_session = current_app.Session()
@@ -41,3 +41,4 @@ def set_db(app):
         test_session.delete(test_user_2)
         test_session.delete(test_user_3)
         test_session.commit()
+        test_session.close()

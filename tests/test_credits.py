@@ -8,7 +8,7 @@ from credit import check_user_with_password_exists, logger
 from .test_migrations import alembic_cfg
 
 
-@pytest.fixture(autouse=False)
+@pytest.fixture()
 def del_table_users_and_return_after_test():
     command.downgrade(alembic_cfg, 'base')
     yield None
