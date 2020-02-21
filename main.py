@@ -125,6 +125,8 @@ def register_user():
 
     return jsonify({'newPassword': new_password, 'token': current_app.token_gen.create_new_token(data['name'], current_app.token_exp)}), 200
 
+def change_password():
+
 def create_app():
     app = Flask(__name__)
     app.engine = create_engine(os.environ.get('TDA_DB'), echo=True)
@@ -132,6 +134,7 @@ def create_app():
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     app.add_url_rule('/my-todos', view_func=return_user_workspace, methods=['POST'])
     app.add_url_rule('/register', view_func=register_user, methods=['POST'])
+    app.add_url_rule('/user/me/edit', view_func=change_password, methods=['POST'])
     app.token_gen = TokenGenerator(os.environ.get('TDA_TOKEN_KEY'))
     app.token_exp = int(os.environ.get('TDA_TOKEN_EXPIRATION_MINUTES'))
     return app
