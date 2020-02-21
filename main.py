@@ -127,6 +127,40 @@ def register_user():
 
 def change_password():
 
+    try:
+        data = request.get_json()
+    except werkzeug.exceptions.BadRequest as inf:
+        logger.info(f'Received data is not in json format: {inf}')
+        return 'Data is not in json format.', 400
+    
+    if data is None:
+        logger.info('In POST request Content-Type header is not json.')
+        return 'Content-Type is not json.', 400
+        
+    if 'old_password' not in data or 'useremail' not in data or 'new_password' not in data:
+        logger.info('In POST request name or/and useremail are missing.')
+        return 'Name or/and useremail are missing.', 400
+
+    if not isinstance(data['old_password'], str):
+        logger.info('In POST request old_password is not a string.')
+        return 'Old password is not a string.', 400
+
+    if not isinstance(data['useremail'], str):
+        logger.info('In POST request useremail is not a string.')
+        return 'Useremail is not a string.', 400
+
+    if not isinstance(data['new_password'], str):
+        logger.info('In POST request old_password is not a string.')
+        return 'New password is not a string.', 400
+
+    if not check_user_with_password_exists(data['name'], data['old_password']):
+        logger.info('In POST request name or password is invalid.')
+        return 'Invalid name or password.', 403
+
+    
+
+    
+
 def create_app():
     app = Flask(__name__)
     app.engine = create_engine(os.environ.get('TDA_DB'), echo=True)
