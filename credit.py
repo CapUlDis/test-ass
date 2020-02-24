@@ -25,9 +25,5 @@ def check_user_with_password_exists(name, password):
         session.close()
         logger.info(f'NoResultFound: no such username in database: {err}.')
         return False
-    except MultipleResultsFound as err:
-        session.close()
-        logger.error(f'MultipleResultsFound: database has more than one users with such name: {err}.')
-        raise LookupError(f'MultipleResultsFound: database has more than one users with such name: {err}.')
     session.close()
     return check_password_hash(query.passwordhash, password)

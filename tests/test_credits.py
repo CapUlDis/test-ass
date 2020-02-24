@@ -34,13 +34,6 @@ def test_check_user_with_password_exists_no_result(app):
             assert check_user_with_password_exists('foo', 'bar') is False
         assert 'NoResultFound: no such username in database' in mock_info.call_args[0][0]
 
-def test_check_user_with_password_exists_multiple_result(app, set_db):
-    with pytest.raises(LookupError):
-        with mock.patch.object(logger, 'error') as mock_error:
-            with app.app_context():
-                check_user_with_password_exists('foo', 'bar')
-                assert 'MultipleResultsFound: database has more than one users with such name' in mock_error.call_args[0][0]
-
 def test_check_user_with_password_exists_missing_db(app):
     with pytest.raises(ConnectionError):
         with mock.patch.object(logger, 'error') as mock_error:
