@@ -2,7 +2,7 @@ import os, werkzeug, logging
 from flask import Flask, request, current_app, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from credit import check_user_with_password_exists, check_useremail_exist, generate_password, add_new_user_to_db
+from credit import check_user_with_password_exists, check_name_exist, generate_password, add_new_user_to_db
 from auth import TokenGenerator
 
 
@@ -116,9 +116,9 @@ def register_user():
         logger.info('In POST request useremail is not a string.')
         return 'Useremail is not a string.', 400
 
-    if check_useremail_exist(data['useremail']):
-        logger.info('POST request useremail already exists in database.')
-        return 'User with such email is already registered.', 400
+    if check_name_exist(data['name']):
+        logger.info('POST request name already exists in database.')
+        return 'User with such name is already registered.', 400
     
     new_password = generate_password()
     add_new_user_to_db(data['name'], new_password, data['useremail'])

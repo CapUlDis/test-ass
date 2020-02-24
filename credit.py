@@ -36,10 +36,10 @@ def generate_password():
         password += string.printable[x]
     return password
 
-def check_useremail_exist(useremail):
+def check_name_exist(name):
     session = current_app.Session()
     try:
-        check_result = session.query(exists().where(User.useremail == useremail)).scalar()
+        check_result = session.query(exists().where(User.name == name)).scalar()
     except OperationalError as err:
         session.close()
         logger.error(f'OperationalError: database does not exist or connection does not work. Make sure that postgresql server run and run dbsetup.sh: {err}.')
@@ -48,9 +48,8 @@ def check_useremail_exist(useremail):
         session.close()
         logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
         raise NameError(f'Table users does not exist in database: {err}.')
-    else:
-        session.close()
-        return check_result
+    session.close()
+    return check_result
 
 def add_new_user_to_db(name, password, useremail):
     session = current_app.Session()
