@@ -1,6 +1,7 @@
+from pathlib import Path
 from logging.config import fileConfig
 import os, sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(Path(__file__).parent.absolute())
 import models
 
 from sqlalchemy import pool, create_engine
