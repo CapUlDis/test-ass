@@ -67,4 +67,23 @@ def add_new_user_to_db(name, password, useremail):
         logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
         raise NameError(f'Table users does not exist in database: {err}.')
 
+def change_user_password(name, new_password):
+    session = current_app.Session()
+    try:
+        our_user = session.query(User).filter_by(name=name).one()
+        our_user.passwordhash = generate_password_hash(new_password)
+    except OperationalError as err:
+        logger.error(f'OperationalError: database does not exist or connection does not work. Make sure that postgresql server run and run dbsetup.sh: {err}.')
+        raise ConnectionError(f'Database are not connected to app or does not exist: {err}.')
+    except ProgrammingError as err:
+        logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
+        raise NameError(f'Table users does not exist in database: {err}.')
+    except NoResultFound as err:
+        logger.error(f'NoResultFound: no name {name} in database: {err}.')
+        raise NoResultFound(f'NoResultFound: no name {name} in database.')
+    finally:
+        session.close()
+        
+    
+
     

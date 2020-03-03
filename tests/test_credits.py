@@ -6,7 +6,7 @@ from sqlalchemy.sql import exists
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import and_
 from alembic import command
-from credit import check_user_with_password_exists, logger, check_name_exist, add_new_user_to_db
+from credit import check_user_with_password_exists, logger, check_name_exist, add_new_user_to_db, change_user_password
 from models import User
 from .test_migrations import alembic_cfg
 
@@ -86,3 +86,7 @@ def test_add_new_user_to_db(app):
         session = current_app.Session()
         assert session.query(exists().where(and_(User.name == 'foo', User.useremail == 'bar@bax.ru'))).scalar()
         session.close()
+
+def test_change_user_password_normal_case(app, set_db):
+    change_user_password('denchik', 'foobaz')
+    assert check_user_with_password_exists('denchik', 'foobaz')

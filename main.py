@@ -150,16 +150,20 @@ def change_password():
         return 'Useremail is not a string.', 400
 
     if not isinstance(data['new_password'], str):
-        logger.info('In POST request old_password is not a string.')
+        logger.info('In POST request new_password is not a string.')
         return 'New password is not a string.', 400
 
     if not check_user_with_password_exists(data['name'], data['old_password']):
         logger.info('In POST request name or password is invalid.')
         return 'Invalid name or password.', 403
 
-    
+    if len(data['new_password']) < 6:
+        logger.info('In POST request new password has less than 6 characters')
+        return 'New password must be at least 6 characters.', 400
 
     
+
+    return 'Your password was successfully changed.', 200
 
 def create_app():
     app = Flask(__name__)
