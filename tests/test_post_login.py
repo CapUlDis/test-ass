@@ -1,5 +1,6 @@
 import pytest, json
 from unittest import mock
+from flask import current_app
 from main import logger
 
 
@@ -18,7 +19,7 @@ from main import logger
         ),
         ids = ['No Content-Type','Content-Type is xml','Not json format','No password and data', 'Not string name', 'Not string password', 'Not registered name', 'Invalid password']
 )
-def test_login_with_invalid_data_and_headers(client, app, data, headers, logger_message, message, http_code):
+def test_login_with_invalid_data_and_headers(client, app, set_db, data, headers, logger_message, message, http_code):
         with mock.patch.object(logger, 'info') as mock_info:
                 response = client.post(
                         '/login', data = data, headers = headers)
@@ -27,7 +28,7 @@ def test_login_with_invalid_data_and_headers(client, app, data, headers, logger_
                 assert message in response.data
                 assert http_code == response.status_code
 
-def test_login_with_valid_data_and_header(client, app):
+def test_login_with_valid_data_and_header(client, app, set_db):
         response = client.post(
                         '/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'})
         

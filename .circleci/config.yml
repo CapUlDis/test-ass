@@ -4,16 +4,25 @@ jobs:
     working_directory: ~/to-do-app
     docker:
       - image: circleci/python:3.6.4
+      - image: circleci/postgres:9.4.25-ram
     steps:
       - checkout  # checkout source code to working directory
+      - run: sudo apt update
+      - run: sudo apt install postgresql-client-9.4
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             make install-test-requirements
+      - run: 
+          name: Setup test database
+          command: |
+            . venv/bin/activate
+            source dbsetup.sh
       - run:
-          name: run tests
+          name: Run tests
           command: |
             . venv/bin/activate
             make test
+      

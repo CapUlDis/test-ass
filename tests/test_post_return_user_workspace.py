@@ -19,7 +19,7 @@ def test_return_user_workspace_error_cases(client, app, headers, logger_message,
         assert returned_message in response_error.data
         assert http_code == response_error.status_code
 
-def test_return_user_workspace_valid_token(client, app):
+def test_return_user_workspace_valid_token(client, app, set_db):
     response_login = client.post('/login', data = json.dumps({"name": "denchik", "password": "foobar"}), headers = {'content-type': 'application/json'})
     received_token = json.loads(response_login.data)
     response_return_user_workspace = client.post('/my-todos', headers = {'Authorization': received_token['token']})

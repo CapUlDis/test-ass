@@ -1,6 +1,8 @@
 import os, werkzeug, logging
 from flask import Flask, request, current_app, jsonify
-from credit import Credits
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from credit import check_user_with_password_exists
 from auth import TokenGenerator
 
 
@@ -9,6 +11,7 @@ logging.basicConfig(filename="main.log",
                     filemode='w',
                     level = logging.INFO) 
 logger = logging.getLogger() 
+
 
 def login():
     
@@ -34,7 +37,7 @@ def login():
         logger.info('In POST request password is not a string.')
         return 'Password is not a string.', 400
 
-    if not current_app.credit.check_user_with_password_exists(data['name'], data['password']):
+    if not check_user_with_password_exists(data['name'], data['password']):
         logger.info('In POST request name or password is invalid.')
         return 'Invalid name or password.', 403
         
@@ -91,9 +94,10 @@ def return_user_workspace():
 
 def create_app():
     app = Flask(__name__)
+    app.engine = create_engine(os.environ.get('TDA_DB'), echo=True)
+    app.Session = sessionmaker(bind=app.engine)
     app.add_url_rule('/login', view_func=login, methods=['POST'])
     app.add_url_rule('/my-todos', view_func=return_user_workspace, methods=['POST'])
-    app.credit = Credits(os.environ.get('TDA_CREDITS'))
     app.token_gen = TokenGenerator(os.environ.get('TDA_TOKEN_KEY'))
     app.token_exp = int(os.environ.get('TDA_TOKEN_EXPIRATION_MINUTES'))
     return app
