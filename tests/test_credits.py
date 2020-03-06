@@ -85,7 +85,11 @@ def test_add_new_user_to_db(app):
         add_new_user_to_db('foo', 'test_pwhash', 'bar@bax.ru')
         session = current_app.Session()
         assert session.query(exists().where(and_(User.name == 'foo', User.useremail == 'bar@bax.ru'))).scalar()
+        created_user = User.query.filter_by(name = 'foo').one()
+        session.delete(created_user)
+        session.commit()
         session.close()
+        
 
 def test_change_user_password(app, set_db):
     change_user_password('denchik', 'barbaz')
