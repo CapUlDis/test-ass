@@ -72,6 +72,8 @@ def change_user_password(name, new_password):
     try:
         our_user = session.query(User).filter_by(name=name).one()
         our_user.passwordhash = generate_password_hash(new_password)
+        session.add(our_user)
+        session.commit()
     except OperationalError as err:
         logger.error(f'OperationalError: database does not exist or connection does not work. Make sure that postgresql server run and run dbsetup.sh: {err}.')
         raise ConnectionError(f'Database are not connected to app or does not exist: {err}.')

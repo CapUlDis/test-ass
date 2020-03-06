@@ -87,3 +87,6 @@ def test_add_new_user_to_db(app):
         assert session.query(exists().where(and_(User.name == 'foo', User.useremail == 'bar@bax.ru'))).scalar()
         session.close()
 
+def test_change_user_password(app, set_db):
+    change_user_password('denchik', 'barbaz')
+    assert check_user_with_password_exists('denchik', 'barbaz')
