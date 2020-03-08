@@ -28,7 +28,7 @@ def check_user_with_password_exists(name, password):
         return False
     session.close()
     return check_password_hash(query.passwordhash, password)
-
+    
 def generate_password():
     password = ''
     for n in range(16):
@@ -66,3 +66,5 @@ def add_new_user_to_db(name, password, useremail):
         session.close()
         logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
         raise NameError(f'Table users does not exist in database: {err}.')
+
+    
