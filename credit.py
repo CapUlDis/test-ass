@@ -14,7 +14,7 @@ def check_user_with_password_exists(name, password):
     session = current_app.Session()
     query = session.query(User).filter(User.name == name)
     try:
-        query.one()
+        query = session.query(User).filter(User.name == name).one()
     except OperationalError as err:
         session.close()
         logger.error(f'OperationalError: database does not exist or connection does not work. Make sure that postgresql server run and run dbsetup.sh: {err}.')
@@ -27,14 +27,9 @@ def check_user_with_password_exists(name, password):
         session.close()
         logger.info(f'NoResultFound: no such username in database: {err}.')
         return False
-    except MultipleResultsFound as err:
-        session.close()
-        logger.error(f'MultipleResultsFound: database has more than one users with such name: {err}.')
-        raise LookupError(f'MultipleResultsFound: database has more than one users with such name: {err}.')
-    else:
-        session.close()
-        return check_password_hash(query.one().passwordhash, password)
-
+    session.close()
+    return check_password_hash(query.passwordhash, password)
+    
 def generate_password():
     password = ''
     for n in range(16):
@@ -42,10 +37,10 @@ def generate_password():
         password += string.printable[x]
     return password
 
-def check_useremail_exist(useremail):
+def check_name_exist(name):
     session = current_app.Session()
     try:
-        check_result = session.query(exists().where(User.useremail == useremail)).scalar()
+        check_result = session.query(exists().where(User.name == name)).scalar()
     except OperationalError as err:
         session.close()
         logger.error(f'OperationalError: database does not exist or connection does not work. Make sure that postgresql server run and run dbsetup.sh: {err}.')
@@ -54,9 +49,8 @@ def check_useremail_exist(useremail):
         session.close()
         logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
         raise NameError(f'Table users does not exist in database: {err}.')
-    else:
-        session.close()
-        return check_result
+    session.close()
+    return check_result
 
 def add_new_user_to_db(name, password, useremail):
     session = current_app.Session()
@@ -73,5 +67,26 @@ def add_new_user_to_db(name, password, useremail):
         session.close()
         logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
         raise NameError(f'Table users does not exist in database: {err}.')
+
+def change_user_password(name, new_password):
+    session = current_app.Session()
+    try:
+        our_user = session.query(User).filter_by(name=name).one()
+        our_user.passwordhash = generate_password_hash(new_password)
+        session.add(our_user)
+        session.commit()
+    except OperationalError as err:
+        logger.error(f'OperationalError: database does not exist or connection does not work. Make sure that postgresql server run and run dbsetup.sh: {err}.')
+        raise ConnectionError(f'Database are not connected to app or does not exist: {err}.')
+    except ProgrammingError as err:
+        logger.error(f'ProgrammingError: table users does not exist in database. Create table with dbsetup.sh: {err}.')
+        raise NameError(f'Table users does not exist in database: {err}.')
+    except NoResultFound as err:
+        logger.error(f'NoResultFound: no name {name} in database: {err}.')
+        raise NoResultFound(f'NoResultFound: no name {name} in database.')
+    finally:
+        session.close()
+        
+    
 
     

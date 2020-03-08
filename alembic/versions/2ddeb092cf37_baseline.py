@@ -16,16 +16,11 @@ branch_labels = None
 depends_on = None
 
 
-from alembic import op
-import sqlalchemy as sa
-
-
-
 def upgrade():
     op.create_table(
         'users',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('name', sa.String(), nullable=False),
+        sa.Column('name', sa.String(), unique=True, nullable=False),
         sa.Column('passwordhash', sa.String(), nullable=False),
         sa.Column('useremail', sa.String(), nullable=False)
     )

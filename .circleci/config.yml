@@ -20,8 +20,6 @@ jobs:
           command: |
             . venv/bin/activate
             source dbsetup.sh
-          environment:
-            USER: postgresql://postgres@localhost/postgres
       - run:
           name: Run tests
           command: |
